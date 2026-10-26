@@ -15,12 +15,6 @@ export interface RenkoBrick {
   close: number;
 }
 
-export interface PositionedRenkoBrick {
-  brick: RenkoBrick;
-  logical: number;
-  width: number;
-}
-
 const MAX_BRICKS_PER_BAR = 500;
 const FX_CURRENCIES = new Set([
   'AUD', 'CAD', 'CHF', 'EUR', 'GBP', 'JPY', 'NZD', 'USD',
@@ -200,18 +194,25 @@ function clearLayer(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, dp
 
 function renderRenko(args: RendererLayerArgs, _canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
   const bricks = isRenkoPayload(args.data) ? args.data : [];
-  if (bricks.length === 0) return;
-  const logicalByTime = new Map<number, number>();
-  args.bars.forEach((bar, index) => {
-    if (!logicalByTime.has(bar.time)) logicalByTime.set(bar.time, index);
-  });
-  const pitch = Math.max(1, args.coords.pxPerBar());
-  const range = args.coords.visibleLogicalRange();
-  const positioned = layoutRenkoBricks(bricks.map(brick => ({
-    brick,
-    logical: logicalByTime.get(brick.time) ?? args.coords.timeToLogical(brick.time),
-  })), range, pitch);
-  for (const { brick, logical, width } of positioned) {
+  const barCount = args.bars.length;
+  if (bricks.length === 0 || barCount === 0) return;
+
+  // Vela's axis is the source candle axis. Give the brick sequence a fixed,
+  // uniform logical position across that axis: brick 0 sits on the first bar,
+  // the last brick on the last bar. Zoom and pan then behave exactly like a
+  // normal series (the pitch scales with the chart zoom) instead of the
+  // sequence being re-packed into the viewport on every frame.
+  const lastLogical = Math.max(1, barCount - 1);
+  const unitsPerBrick = bricks.length > 1 ? lastLogical / (bricks.length - 1) : lastLogical;
+  const pitch = args.coords.pxPerBar();
+  const spacing = Math.max(0.5, pitch * unitsPerBrick);
+  const width = Math.max(1, Math.min(spacing * 0.94, 120));
+  const visible = args.coords.visibleLogicalRange();
+
+  for (let index = 0; index < bricks.length; index += 1) {
+    const logical = bricks.length > 1 ? index * unitsPerBrick : 0;
+    if (logical < visible.from - 1 || logical > visible.to + 1) continue;
+    const brick = bricks[index];
     const x = args.coords.logicalToX(logical);
     const openY = args.coords.priceToY(brick.open, args.scale, args.bounds);
     const closeY = args.coords.priceToY(brick.close, args.scale, args.bounds);
@@ -232,28 +233,6 @@ function renderRenko(args: RendererLayerArgs, _canvas: HTMLCanvasElement, ctx: C
     ctx.fillRect(x - width / 2, top, width, height);
     ctx.strokeRect(x - width / 2, top, width, height);
   }
-}
-
-export function layoutRenkoBricks(
-  entries: readonly { brick: RenkoBrick; logical: number }[],
-  visibleRange: { from: number; to: number },
-  pitch: number,
-): PositionedRenkoBrick[] {
-  if (!(pitch > 0) || !Number.isFinite(pitch)) return [];
-  const sourceVisible = entries.filter(entry => Number.isFinite(entry.logical)
-    && entry.logical >= visibleRange.from - 1 && entry.logical <= visibleRange.to + 1);
-  // A Renko/Range bar has its own sequential x-axis.  Vela supplies the host
-  // candle viewport to layers, so use it only as a window selector, then lay
-  // synthetic bars into consecutive columns (never into time gaps).
-  const capacity = Math.max(1, Math.ceil(visibleRange.to - visibleRange.from) + 2);
-  const visible = sourceVisible.slice(-capacity);
-  const firstLogical = visibleRange.to - visible.length + 0.5;
-  const width = Math.max(2, Math.min(12, pitch * 0.72));
-  return visible.map((entry, index) => ({
-    brick: entry.brick,
-    logical: firstLogical + index,
-    width,
-  }));
 }
 
 function isRenkoPayload(value: unknown): value is RenkoBrick[] {

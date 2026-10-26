@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { buildRangeBars, buildRenkoBricks, layoutRenkoBricks } from './orderFlowCharts.ts';
+import { buildRangeBars, buildRenkoBricks } from './orderFlowCharts.ts';
 
 function barsFromCloses(closes) {
   return closes.map((close, index) => {
@@ -179,14 +179,4 @@ test('range bars ignore flat candles and invalid settings', () => {
     { time: 1, open: 1, high: 1, low: 1, close: 1 },
     { time: 2, open: 1, high: 2, low: 1, close: 2 },
   ], { brickPips: 0, customBrickPips: 0 }), []);
-});
-
-test('synthetic bricks occupy consecutive equal-width columns rather than source-time gaps', () => {
-  const entries = [
-    { brick: { time: 10, open: 1, high: 2, low: 1, close: 2 }, logical: 5 },
-    { brick: { time: 10, open: 2, high: 3, low: 2, close: 3 }, logical: 5 },
-  ];
-  const narrow = layoutRenkoBricks(entries, { from: 0, to: 10 }, 12);
-  assert.equal(narrow[1].logical - narrow[0].logical, 1);
-  assert.equal(narrow[0].width, narrow[1].width);
 });
