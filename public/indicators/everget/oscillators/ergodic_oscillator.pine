@@ -1,0 +1,35 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Ergodic Oscillator script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Ergodic Oscillator", shorttitle="EOSC")
+
+firstSmoothingLength = input.int(title="1st Smoothing Length", minval=1, defval=8)
+secondSmoothingLength = input.int(title="2nd Smoothing Length", minval=1, defval=5)
+signalLength = input.int(title="Signal Length", minval=1, defval=5)
+ergodicLength = input.int(title="Ergodic Length", minval=1, defval=5)
+ergodicSignalLength = input.int(title="Ergodic Signal Length", minval=1, defval=14)
+overboughtLevel = input.int(title="Overbought Level", defval=20)
+oversoldLevel = input.int(title="Oversold Level", defval=-20)
+src = input.source(title="Source", defval=close)
+
+momentum = change(src)
+
+ema1 = ema(momentum, firstSmoothingLength)
+ema1Abs = ema(abs(momentum), firstSmoothingLength)
+
+ema2 = ema(ema1, secondSmoothingLength)
+ema2Abs = ema(abs(ema1Abs), secondSmoothingLength)
+
+tsi = 100 * ema2 / ema2Abs
+
+signal = ema(tsi, signalLength)
+
+ergodic = ema(signal, ergodicLength)
+
+ergodicSignal = ema(ergodic, ergodicSignalLength)
+
+plot(ergodic, title="Ergodic", linewidth=2, color=#3c78d8)
+plot(ergodicSignal, title="Signal", linewidth=2, color=#cc0000)
+
+hline(overboughtLevel, title="Overbought Level", linestyle=dotted, linewidth=2, color=#0ebb23)
+hline(oversoldLevel, title="Oversold Level", linestyle=dotted, linewidth=2, color=#ff9370)

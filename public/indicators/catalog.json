@@ -1,0 +1,708 @@
+[
+  {
+    "name": "Acceleration Bands",
+    "url": "/indicators/everget/compatible/bands_and_channels/acceleration_bands.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Bands & Channels"
+  },
+  {
+    "name": "Accelerator Oscillator",
+    "url": "/indicators/everget/compatible/oscillators/accelerator_oscillator.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "All Time High Percent Drop",
+    "url": "/indicators/everget/statistics/all_time_high_percent_drop.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Statistics"
+  },
+  {
+    "name": "Alpha Decreasing Exponential Moving Average",
+    "url": "/indicators/everget/movings/alpha_decreasing_exponential_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Arnaud Legoux Moving Average",
+    "url": "/indicators/everget/compatible/movings/arnaud_legoux_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Awesome Oscillator",
+    "url": "/indicators/everget/compatible/oscillators/awesome_oscillator.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Bryant Adaptive Moving Average",
+    "url": "/indicators/everget/compatible/movings/bryant_adaptive_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Center Of Gravity Oscillator",
+    "url": "/indicators/everget/oscillators/center_of_gravity_oscillator.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Chande Momentum Oscillator",
+    "url": "/indicators/everget/compatible/oscillators/chande_momentum_oscillator.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Chandelier Exit",
+    "url": "/indicators/everget/trailing_stops/chandelier_exit.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Trailing Stops"
+  },
+  {
+    "name": "Corrected Moving Average",
+    "url": "/indicators/everget/movings/corrected_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Damping Index",
+    "url": "/indicators/everget/compatible/volatility/damping_index.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Volatility"
+  },
+  {
+    "name": "Disparity Index",
+    "url": "/indicators/everget/compatible/oscillators/disparity_index.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Distance Coefficient Filter",
+    "url": "/indicators/everget/compatible/movings/distance_coefficient_filter.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Distance Weighted Moving Average",
+    "url": "/indicators/everget/compatible/movings/distance_weighted_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Double Exponential Moving Average",
+    "url": "/indicators/everget/compatible/movings/double_exponential_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Double Weighted Moving Average",
+    "url": "/indicators/everget/compatible/movings/double_weighted_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Dynamic Momentum Index",
+    "url": "/indicators/everget/compatible/oscillators/dynamic_momentum_index.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Ehlers Cyber Cycle",
+    "url": "/indicators/everget/compatible/oscillators/ehlers_cyber_cycle.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Ehlers Distance Coefficient Filter",
+    "url": "/indicators/everget/compatible/movings/ehlers_distance_coefficient_filter.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Ehlers Leading Indicator",
+    "url": "/indicators/everget/movings/ehlers_leading_indicator.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Ehlers Mesa Adaptive Moving Averages",
+    "url": "/indicators/everget/compatible/movings/ehlers_mesa_adaptive_moving_averages.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Ehlers Modified Optimum Elliptic Filter",
+    "url": "/indicators/everget/movings/ehlers_modified_optimum_elliptic_filter.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Ehlers Optimum Elliptic Filter",
+    "url": "/indicators/everget/movings/ehlers_optimum_elliptic_filter.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Ehlers Stochastic Cyber Cycle",
+    "url": "/indicators/everget/compatible/oscillators/ehlers_stochastic_cyber_cycle.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Ehlers Super Passband Filter",
+    "url": "/indicators/everget/compatible/oscillators/ehlers_super_passband_filter.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Ergodic Oscillator",
+    "url": "/indicators/everget/compatible/oscillators/ergodic_oscillator.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Exponential Moving Average",
+    "url": "/indicators/everget/compatible/movings/exponential_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Fancy Shapes",
+    "url": "/indicators/everget/research/fancy_shapes.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Research"
+  },
+  {
+    "name": "Fibonacci Weighted Moving Average",
+    "url": "/indicators/everget/movings/fibonacci_weighted_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Finite Impulse Response Filter",
+    "url": "/indicators/everget/compatible/movings/finite_impulse_response_filter.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Fractal Adaptive Moving Average",
+    "url": "/indicators/everget/compatible/movings/fractal_adaptive_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Gopalakrishnan Range Index",
+    "url": "/indicators/everget/compatible/volatility/gopalakrishnan_range_index.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Volatility"
+  },
+  {
+    "name": "Halftrend",
+    "url": "/indicators/everget/trailing_stops/halftrend.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Trailing Stops"
+  },
+  {
+    "name": "Henderson Weighted Moving Average",
+    "url": "/indicators/everget/movings/henderson_weighted_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Hull Moving Average",
+    "url": "/indicators/everget/compatible/movings/hull_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Interquartile Range Bands",
+    "url": "/indicators/everget/compatible/bands_and_channels/interquartile_range_bands.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Bands & Channels"
+  },
+  {
+    "name": "Intraday Momentum Index",
+    "url": "/indicators/everget/compatible/oscillators/intraday_momentum_index.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Inverse Distance Weighted Moving Average",
+    "url": "/indicators/everget/movings/inverse_distance_weighted_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Jurik Moving Average",
+    "url": "/indicators/everget/compatible/movings/jurik_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Jurik Rsx",
+    "url": "/indicators/everget/compatible/oscillators/jurik_rsx.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Kairi Relative Index",
+    "url": "/indicators/everget/compatible/oscillators/kairi_relative_index.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Laguerre Filter",
+    "url": "/indicators/everget/compatible/movings/laguerre_filter.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Leap Years",
+    "url": "/indicators/everget/highlighters/leap_years.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Highlighters"
+  },
+  {
+    "name": "Leo Moving Average",
+    "url": "/indicators/everget/compatible/movings/leo_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Linear Regression (All Data)",
+    "url": "/indicators/everget/compatible/statistics/linear_regression_all_data.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Statistics",
+    "collections": [
+      "Editor's Pick / Trend"
+    ]
+  },
+  {
+    "name": "Linear Weighted Moving Average",
+    "url": "/indicators/everget/movings/linear_weighted_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Mass Index",
+    "url": "/indicators/everget/compatible/oscillators/mass_index.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Mcginley Dynamic",
+    "url": "/indicators/everget/compatible/movings/mcginley_dynamic.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Mcnicholl Moving Average",
+    "url": "/indicators/everget/compatible/movings/mcnicholl_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Moving Geometric Mean",
+    "url": "/indicators/everget/compatible/movings/moving_geometric_mean.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Moving Harmonic Mean",
+    "url": "/indicators/everget/movings/moving_harmonic_mean.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Moving Quadratic Mean",
+    "url": "/indicators/everget/compatible/movings/moving_quadratic_mean.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Multiple Hull Moving Average",
+    "url": "/indicators/everget/compatible/movings/multiple_hull_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Net Volume",
+    "url": "/indicators/everget/compatible/volume/net_volume.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Volume"
+  },
+  {
+    "name": "Normalized Average True Range",
+    "url": "/indicators/everget/compatible/volatility/normalized_average_true_range.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Volatility"
+  },
+  {
+    "name": "NRTR Nick Rypock Trailing Reverse",
+    "url": "/indicators/everget/trailing_stops/nrtr_nick_rypock_trailing_reverse.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Trailing Stops",
+    "collections": [
+      "Editor's Pick / Trailing Stops"
+    ]
+  },
+  {
+    "name": "On Balance Volume",
+    "url": "/indicators/everget/volume/on_balance_volume.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Volume"
+  },
+  {
+    "name": "Parabolic SAR",
+    "url": "/indicators/everget/trailing_stops/parabolic_sar.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Trailing Stops"
+  },
+  {
+    "name": "Parabolic Weighted Moving Average",
+    "url": "/indicators/everget/compatible/movings/parabolic_weighted_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Pentuple Exponential Moving Average",
+    "url": "/indicators/everget/compatible/movings/pentuple_exponential_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Percent Volume",
+    "url": "/indicators/everget/compatible/volume/percent_volume.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Volume"
+  },
+  {
+    "name": "Percentage Price Oscillator",
+    "url": "/indicators/everget/compatible/oscillators/percentage_price_oscillator.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Percentage Volume Oscillator",
+    "url": "/indicators/everget/compatible/oscillators/percentage_volume_oscillator.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Pretty Good Oscillator",
+    "url": "/indicators/everget/compatible/oscillators/pretty_good_oscillator.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Quadruple Exponential Moving Average",
+    "url": "/indicators/everget/compatible/movings/quadruple_exponential_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Quarters",
+    "url": "/indicators/everget/highlighters/quarters.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Highlighters"
+  },
+  {
+    "name": "Quick Moving Average",
+    "url": "/indicators/everget/movings/quick_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Random Walk Index",
+    "url": "/indicators/everget/compatible/oscillators/random_walk_index.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Range Candles",
+    "url": "/indicators/everget/highlighters/range_candles.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Highlighters"
+  },
+  {
+    "name": "Rapid RSI",
+    "url": "/indicators/everget/compatible/oscillators/rapid_rsi.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Relative Momentum Index",
+    "url": "/indicators/everget/compatible/oscillators/relative_momentum_index.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Renko Chart Identifier",
+    "url": "/indicators/everget/compatible/research/renko_chart_identifier.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Research"
+  },
+  {
+    "name": "Repulse",
+    "url": "/indicators/everget/compatible/oscillators/repulse.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Rsx",
+    "url": "/indicators/everget/compatible/oscillators/rsx.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Script With Expiration Time",
+    "url": "/indicators/everget/research/script_with_expiration_time.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Research"
+  },
+  {
+    "name": "Self Weighted Moving Average",
+    "url": "/indicators/everget/movings/self_weighted_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Sharp Modified Moving Average",
+    "url": "/indicators/everget/movings/sharp_modified_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Simple Moving Average",
+    "url": "/indicators/everget/compatible/movings/simple_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Sine Weighted Moving Average",
+    "url": "/indicators/everget/movings/sine_weighted_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Smoothed Rate Of Change",
+    "url": "/indicators/everget/compatible/oscillators/smoothed_rate_of_change.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Spencer 15 Point Moving Average",
+    "url": "/indicators/everget/compatible/movings/spencer_15_point_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Spencer 21 Point Moving Average",
+    "url": "/indicators/everget/compatible/movings/spencer_21_point_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Supertrend",
+    "url": "/indicators/everget/trailing_stops/supertrend.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Trailing Stops"
+  },
+  {
+    "name": "Ticker Performance By US President",
+    "url": "/indicators/everget/statistics/ticker_performance_by_us_president.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Statistics"
+  },
+  {
+    "name": "Total Power Indicator",
+    "url": "/indicators/everget/compatible/oscillators/total_power_indicator.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Trend Continuation Factor",
+    "url": "/indicators/everget/compatible/oscillators/trend_continuation_factor.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Trend Detection Index",
+    "url": "/indicators/everget/compatible/oscillators/trend_detection_index.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Trend Intensity Index",
+    "url": "/indicators/everget/compatible/oscillators/trend_intensity_index.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Trend Trigger Factor",
+    "url": "/indicators/everget/compatible/oscillators/trend_trigger_factor.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Trendscore",
+    "url": "/indicators/everget/oscillators/trendscore.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Triangular Moving Average",
+    "url": "/indicators/everget/compatible/movings/triangular_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "True Range Double",
+    "url": "/indicators/everget/compatible/oscillators/true_range_double.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "Unit Testing Framework",
+    "url": "/indicators/everget/utils/unit_testing_framework.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Utilities"
+  },
+  {
+    "name": "Vertical Horizontal Filter",
+    "url": "/indicators/everget/compatible/oscillators/vertical_horizontal_filter.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Oscillators"
+  },
+  {
+    "name": "VIDYA Variable Index Dynamic Average",
+    "url": "/indicators/everget/compatible/movings/vidya_variable_index_dynamic_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Volume Accumulation",
+    "url": "/indicators/everget/volume/volume_accumulation.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Volume"
+  },
+  {
+    "name": "Weekdays Gaps",
+    "url": "/indicators/everget/highlighters/weekdays_gaps.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Highlighters"
+  },
+  {
+    "name": "Weighted Moving Average",
+    "url": "/indicators/everget/compatible/movings/weighted_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  },
+  {
+    "name": "Wilder Modified Moving Average",
+    "url": "/indicators/everget/compatible/movings/wilder_modified_moving_average.pine",
+    "language": "pine",
+    "enabled": false,
+    "category": "Moving Averages"
+  }
+]

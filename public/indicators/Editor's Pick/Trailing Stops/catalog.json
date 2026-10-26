@@ -1,0 +1,10 @@
+[
+  {
+    "name": "NRTR Nick Rypock Trailing Reverse",
+    "source": "/indicators/everget/trailing_stops/nrtr_nick_rypock_trailing_reverse.pine",
+    "subcategory": "Trailing Stops",
+    "sourceUrl": "https://www.tradingview.com/script/XAscppNW-Nick-Rypock-Trailing-Reverse-NRTR-everget/",
+    "license": "GPL-3.0",
+    "licenseFile": "everget/LICENSE"
+  }
+]

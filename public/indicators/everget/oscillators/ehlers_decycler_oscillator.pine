@@ -1,0 +1,56 @@
+//@version=6
+// Copyright (c) 2019-present, Alex Orekhov (everget)
+// Ehlers Decycler Oscillator script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Ehlers Decycler Oscillator", shorttitle="Decycler Oscillator")
+
+hpPeriod = input.int(title="High-pass Filter Period", defval=125)
+k = input.float(title="K Multiplier", step=0.1, defval=1)
+hpPeriod2 = input.int(title="High-pass Filter Period 2", defval=100)
+k2 = input.float(title="K Multiplier 2", step=0.1, defval=1.2)
+src = input.source(title="Source", defval=close)
+highlightCrossovers = input.bool(title="Highlight Crossovers ?", defval=true)
+highlightZeroCrossovers = input.bool(title="Highlight Zero Line Crossovers ?", defval=false)
+applyFilling = input.bool(title="Apply Ribbon Filling ?", defval=false)
+
+PI = 2 * asin(1)
+
+// High-pass Filter
+_hp(src, hpPeriod, mult) =>
+    alphaArg = 2 * PI / (mult * hpPeriod * sqrt(2))
+    
+    alpha = 0.0
+    alpha := cos(alphaArg) != 0
+         ? (cos(alphaArg) + sin(alphaArg) - 1) / cos(alphaArg)
+         : nz(alpha[1])
+    
+    hp = 0.0
+    hp := pow(1 - (alpha / 2), 2) * (src - 2 * nz(src[1]) + nz(src[2])) + 2 * (1 - alpha) * nz(hp[1]) - pow(1 - alpha, 2) * nz(hp[2])
+    hp
+
+hp = _hp(src, hpPeriod, 1)
+decycler = src - hp
+decosc = 100 * k * _hp(decycler, hpPeriod, 0.5) / src
+
+hp2 = _hp(src, hpPeriod2, 1)
+decycler2 = src - hp2
+decosc2 = 100 * k2 * _hp(decycler2, hpPeriod2, 0.5) / src
+
+trendColor = decosc2 > decosc ? #0ebb23 : color.red
+
+decoscColor = applyFilling ? trendColor : #ff5048
+decosc2Color = applyFilling ? trendColor : #f5c75e
+
+decoscPlot = plot(decosc, title="1", linewidth=2, color=decoscColor)
+decosc2Plot = plot(decosc2, title="2", linewidth=2, color=decosc2Color)
+hline(0, title="Zero Level", linestyle=dotted)
+
+transparent = color(color.white, 100)
+
+fillColor = applyFilling ? trendColor : transparent
+fill(decoscPlot, decosc2Plot, color=fillColor)
+
+zeroCrossBgColor = highlightZeroCrossovers ? (decosc > 0 or decosc2 > 0 ? color.green : color.red) : transparent
+bgcolor(zeroCrossBgColor)
+
+plotshape(highlightCrossovers and crossover(decosc, decosc2) ? avg(decosc, decosc[1]) : na, title="Crossover", location=location.absolute, style=shape.circle, size=size.tiny, color=color.green)
+plotshape(highlightCrossovers and crossunder(decosc, decosc2) ? avg(decosc, decosc[1]) : na, title="Crossunder", location=location.absolute, style=shape.circle, size=size.tiny, color=color.red)

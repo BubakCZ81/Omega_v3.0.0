@@ -1,0 +1,23 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Stoller Average Range Channels (STARC) Bands script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Stoller Average Range Channels (STARC) Bands", shorttitle="STARC", overlay=true)
+
+length = input.int(title="Length", minval=1, defval=6)
+maInput = input(title="MA", defval="SMA", options=["EMA", "SMA", "VWMA", "WMA"])
+atrLength = input.int(title="ATR Length", minval=1, defval=15)
+mult = input.float(title="Multiplier", step=0.1, defval=1.33)
+src = input.source(title="Source", defval=close)
+
+basis = iff(maInput == "EMA", ema(src, length),
+	 iff(maInput == "SMA", sma(src, length),
+	 iff(maInput == "VWMA", vwma(src, length),
+	 iff(maInput == "WMA", wma(src, length),
+	 na))))
+
+upperBand = basis + atr(length) * mult
+lowerBand = basis - atr(length) * mult
+
+plot(upperBand, title="Upper", linewidth=2, color=color.blue)
+plot(basis, title="Basis", linewidth=2, color=#6d1e7f)
+plot(lowerBand, title="Lower", linewidth=2, color=color.red)

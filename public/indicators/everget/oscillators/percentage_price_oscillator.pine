@@ -1,0 +1,23 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Percentage Price Oscillator script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Percentage Price Oscillator", shorttitle="PPO")
+
+fastLength = input.int(title="Fast Length", minval=1, defval=12)
+slowLength = input.int(title="Slow Length", minval=1, defval=26)
+signalLength = input.int(title="Signal Length", minval=1, defval=9)
+applyFilling = input.bool(title="Apply Filling ?", defval=false)
+src = input.source(title="Source", defval=close)
+
+ppo = 100 * (ema(src, fastLength) - ema(src, slowLength)) / ema(src, slowLength)
+
+signal = ema(ppo, signalLength)
+
+hist = ppo - signal
+
+plot(hist, title="Histogram", style=histogram, color=#ff006e)
+ppoPlot = plot(ppo, title="PPO", color=#0094ff)
+signalPlot = plot(signal, title="Signal", color=#ff6a00)
+
+fillColor = applyFilling ? (ppo > signal ? #0ebb23 : #cc0000) : color(color.white, 100)
+fill(ppoPlot, signalPlot, color=fillColor)

@@ -1,0 +1,17 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Infinite Impulse Response (IIR) Filter script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Infinite Impulse Response (IIR) Filter", shorttitle="IIRF", overlay=true)
+
+length = input.integer(title="Length", defval=14, minval=2)
+src = input.source(title="Source", defval=close)
+highlight = input.bool(title="Highlight ?", defval=true)
+
+iirfAlpha = 2 / (length + 1)
+iirfLag = math.round(1 / iirfAlpha - 1)
+
+iirf = 0.0
+iirf := iirfAlpha * (src + ta.change(src, iirfLag)) + (1 - iirfAlpha) * nz(iirf[1])
+
+iirfColor = highlight ? iirf > iirf[1] ? color.green : color.red : #6d1e7f
+plot(iirf, title="IIRF", linewidth=2, color=iirfColor)

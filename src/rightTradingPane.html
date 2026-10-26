@@ -1,0 +1,25 @@
+<aside id="omega-trading-pane" aria-label="Paper trading panel" aria-hidden="true">
+  <header class="omega-tp-header">
+    <div class="omega-tp-title">New order <span id="omega-tp-symbol" class="omega-tp-symbol-badge">—</span></div>
+    <button id="trading-pane-close" class="omega-tp-close-btn" type="button" aria-label="Close trading panel">×</button>
+  </header>
+  <div class="omega-tp-body">
+    <div class="omega-tp-direction-grid" role="group" aria-label="Trade direction">
+      <button id="omega-tp-sell" class="omega-tp-dir-btn sell-btn" type="button" aria-pressed="false"><span class="omega-tp-dir-name">SELL</span><span id="omega-tp-sell-price" class="omega-tp-dir-price">—</span></button>
+      <button id="omega-tp-buy" class="omega-tp-dir-btn buy-btn active" type="button" aria-pressed="true"><span class="omega-tp-dir-name">BUY</span><span id="omega-tp-buy-price" class="omega-tp-dir-price">—</span></button>
+    </div>
+    <div class="omega-tp-field-group">
+      <div class="omega-tp-field-header"><span>Volume</span><span>Lots</span></div>
+      <div class="omega-tp-lots-control"><button class="omega-tp-step-btn" type="button" data-lot-step="-0.01" aria-label="Decrease lots">−</button><input id="omega-tp-lots" class="omega-tp-lots-input" type="number" min="0.01" step="0.01" value="0.01" inputmode="decimal" aria-label="Lot size"><button class="omega-tp-step-btn" type="button" data-lot-step="0.01" aria-label="Increase lots">+</button></div>
+      <div class="omega-tp-quick-lots"><button class="omega-tp-quick-lot-btn" type="button" data-lots="0.01">0.01</button><button class="omega-tp-quick-lot-btn" type="button" data-lots="0.10">0.10</button><button class="omega-tp-quick-lot-btn" type="button" data-lots="1.00">1.00</button><button class="omega-tp-quick-lot-btn" type="button" data-lots="5.00">5.00</button></div>
+    </div>
+    <section class="omega-tp-protection-card" aria-label="Stop loss and take profit">
+      <div class="omega-tp-prot-top"><span class="omega-tp-prot-toggle">Protection</span><select id="omega-tp-protection-mode" class="omega-tp-prot-mode" aria-label="Stop loss and take profit mode"><option value="pips">Pips</option><option value="atr">ATR (14)</option></select></div>
+      <div id="omega-tp-atr-readout" class="omega-tp-protection-note" hidden></div>
+      <div class="omega-tp-prot-row"><div class="omega-tp-prot-top"><span class="omega-tp-prot-toggle">Stop Loss</span><span id="omega-tp-sl-unit">Pips</span></div><div class="omega-tp-prot-input-wrap"><input id="omega-tp-sl" class="omega-tp-prot-input" type="number" min="0.1" step="0.1" value="20"></div><div class="omega-tp-prot-estimate"><span>Estimated loss</span><strong id="omega-tp-sl-estimate">—</strong></div></div>
+      <div class="omega-tp-prot-row"><div class="omega-tp-prot-top"><span class="omega-tp-prot-toggle">Take Profit</span><span id="omega-tp-tp-unit">Pips</span></div><div class="omega-tp-prot-input-wrap"><input id="omega-tp-tp" class="omega-tp-prot-input" type="number" min="0.1" step="0.1" value="40"></div><div class="omega-tp-prot-estimate"><span>Estimated profit</span><strong id="omega-tp-tp-estimate">—</strong></div></div>
+    </section>
+    <div class="omega-tp-market-info"><span class="omega-tp-spread-label">Current spread</span><strong id="omega-tp-spread" class="omega-tp-spread-value">—</strong></div>
+  </div>
+  <footer class="omega-tp-footer"><button id="omega-tp-trade" class="omega-tp-trade-btn buy" type="button">Place BUY order</button></footer>
+</aside>

@@ -1,0 +1,23 @@
+//@version=6
+// Copyright (c) 2017-present, Alex Orekhov (everget)
+// Moving Average Channel script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Moving Average Channel", shorttitle="MAC", overlay=true)
+
+upperSrc = input.source(title="Upper Source", defval=high)
+upperLength = input.integer(title="Upper Length", defval=20)
+upperOffset = input.integer(title="Upper Offset", defval=0)
+
+upper = ta.sma(upperSrc, upperLength)
+upperPlot = plot(upper, title="Upper", color=#3c78d8, offset=upperOffset)
+
+lowerSrc = input.source(title="Lower Source", defval=low)
+lowerLength = input.integer(title="Lower Length", defval=20)
+lowerOffset = input.integer(title="Lower Offset", defval=0)
+
+lower = ta.sma(lowerSrc, lowerLength)
+lowerPlot = plot(lower, title="Lower", color=#f57c00, offset=lowerOffset)
+
+fill(upperPlot, lowerPlot, title="Background", color=color.new(#ffd966, 90))
+
+barColor = close > upper ? color.lime : close < lower ? color.red : color.gray
+barcolor(barColor, title="Bar Color")

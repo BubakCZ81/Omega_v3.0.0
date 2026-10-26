@@ -1,0 +1,16 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Elastic Volume Weighted Moving Average script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Elastic Volume Weighted Moving Average", shorttitle="EVWMA", overlay=true)
+
+length = input.integer(title="Length", defval=14)
+src = input.source(title="Source", defval=close)
+highlight = input.bool(title="Highlight ?", defval=true)
+
+volumeSum = math.sum(volume, length)
+
+evwma = 0.0
+evwma := ((volumeSum - volume) * nz(evwma[1]) + volume * src) / volumeSum
+
+evwmaColor = highlight ? evwma > evwma[1] ? color.green : color.red : #6d1e7f
+plot(evwma, title="EVWMA", linewidth=2, color=evwmaColor)

@@ -1,0 +1,9 @@
+# Pine indicator sources
+
+`everget/` contains the 210 Pine source files from [everget/tradingview-pinescript-indicators](https://github.com/everget/tradingview-pinescript-indicators), organized in the upstream category folders. The upstream GPL-3.0 license is included at `everget/LICENSE`; always check the individual source header because some files declare a different license. The included On Balance Volume script declares MIT and its notice is preserved alongside the source.
+
+`catalog.json` is the Vela picker allowlist. It contains only Pine sources that execute with the installed PineTS runtime against deterministic local OHLCV data. The catalog prefers the original, unmodified upstream source whenever it passes validation; a converted copy is used only when needed for PineTS compatibility. All entries are disabled for auto-add and must be selected from the chart's indicator picker. The catalog is alphabetized by indicator name.
+
+`Editor's Pick/` stores TradingView Editor's Picks that also have an explicit redistribution license and pass the same PineTS runtime check. TradingView's feed has no technical subcategory tree, so the subfolders are Omega's technical groupings. Each folder's `catalog.json` points to the verified source and records its TradingView page and license; the main catalog exposes these as Editor's Pick collections without duplicating Pine files.
+
+Unmodified upstream sources remain unchanged. `npm run migrate:indicators` writes v6 conversion copies for the 210 upstream scripts under `everget/compatible/`; `npm run build:indicator-catalog` tries the original sources first, falls back to converted copies only when needed, and adds only scripts that execute to the picker. Sources that fail PineTS validation stay available for further compatibility work but are not presented as working indicators. `npm run test:indicators` verifies the allowlist and re-runs PineTS validation.

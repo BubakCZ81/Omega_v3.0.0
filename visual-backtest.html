@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Omega Visual Backtest</title></head>
+  <body>
+    <main id="visual-backtest-app">
+      <header id="visual-backtest-toolbar">
+        <strong>OMEGA VISUAL BACKTEST</strong>
+        <span id="visual-backtest-market">Preparing isolated chart…</span>
+        <label class="visual-backtest-select-label" for="visual-backtest-chart-type">Chart</label>
+        <select id="visual-backtest-chart-type" aria-label="Backtest chart type">
+          <option value="candles">Candles</option>
+          <option value="heikinashi">Heikin Ashi</option>
+          <option value="renko">Renko (5 pips)</option>
+          <option value="range">Range (5 pips)</option>
+        </select>
+        <button id="visual-backtest-reset" type="button">Reset</button>
+        <button id="visual-backtest-play" type="button" disabled>Play</button>
+        <button id="visual-backtest-step" type="button" disabled>Step</button>
+        <button id="visual-backtest-stop" type="button" disabled>Stop</button>
+      </header>
+      <p id="visual-backtest-status" role="status">Waiting for chart configuration…</p>
+      <div id="visual-backtest-chart" aria-label="Isolated backtest chart"></div>
+    </main>
+    <script type="module" src="./src/visualBacktestStandalone.ts"></script>
+  </body>
+</html>

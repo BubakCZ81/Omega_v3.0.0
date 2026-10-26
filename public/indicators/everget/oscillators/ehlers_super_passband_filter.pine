@@ -1,0 +1,31 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Ehlers Super Passband Filter script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Ehlers Super Passband Filter", shorttitle="ESPF")
+
+fastLength = input.int(title="Fast Length", minval=1, defval=40)
+slowLength = input.int(title="Slow Length", minval=1, defval=60)
+src = input.source(title="Source", defval=close)
+
+ehlersSuperPassbandFilter(src, fastLength, slowLength) =>
+	a1 = 5 / fastLength
+	a2 = 5 / slowLength
+
+	espf = 0.0
+	espf := (a1 - a2) * src +
+		 (a2 * (1 - a1) - a1 * (1 - a2)) * nz(src[1]) +
+		 ((1 - a1) + (1 - a2)) * nz(espf[1]) -
+		 (1 - a1) * (1 - a2) * nz(espf[2])
+
+espf = ehlersSuperPassbandFilter(src, fastLength, slowLength)
+
+// Compute Root Mean Square
+rms = sqrt(sum(espf * espf, 50) / 50)
+
+spbColor = espf > rms ? #0ebb23 : espf < -rms ? #ff0000 : #674ea7
+
+plot(rms, title="+RMS", linewidth=1, color=#f6b26b)
+plot(espf, title="ESPF", linewidth=2, color=spbColor)
+plot(-rms, title="-RMS", linewidth=1, color=#f6b26b)
+
+hline(0, title="Zero Level", linestyle=dotted, color=#989898)

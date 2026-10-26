@@ -1,0 +1,19 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Multiple Hull Moving Average script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Multiple Hull Moving Average", shorttitle="HMA", overlay=true)
+
+len1 = input.int(title="1st Length", defval=20)
+src1 = input.source(title="1st Source", defval=close)
+hma1 = ta.wma(2 * ta.wma(src1, len1 / 2) - ta.wma(src1, len1), math.round(math.sqrt(len1)))
+plot(hma1, title="1", linewidth=2, color=#85200c)
+
+len2 = input.int(title="2nd Length", defval=50)
+src2 = input.source(title="2nd Source", defval=close)
+hma2 = ta.wma(2 * ta.wma(src2, len2 / 2) - ta.wma(src2, len2), math.round(math.sqrt(len2)))
+plot(hma2, title="2", linewidth=2, color=#1155cc)
+
+len3 = input.int(title="3rd Length", defval=100)
+src3 = input.source(title="3rd Source", defval=close)
+hma3 = ta.wma(2 * ta.wma(src3, len3 / 2) - ta.wma(src3, len3), math.round(math.sqrt(len3)))
+plot(hma3, title="3", linewidth=2, color=#f1c232)

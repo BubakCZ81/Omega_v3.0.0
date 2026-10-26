@@ -1,0 +1,36 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Relative Momentum Index script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Relative Momentum Index", shorttitle="RMI")
+
+length = input.int(title="Length", minval=1, defval=14)
+momentumLength = input.int(title="Momentum Length", minval=1, defval=3)
+highlightBreakouts = input.bool(title="Highlight Overbought/Oversold Breakouts ?", defval=true)
+src = input.source(title="Source", defval=close)
+
+up = ta.rma(math.max(ta.change(src, momentumLength), 0), length)
+down = ta.rma(-math.min(ta.change(src, momentumLength), 0), length)
+
+rmi = down == 0 ? 100 : up == 0 ? 0 : 100 - (100 / (1 + up / down))
+
+obLevel = 70
+osLevel = 30
+
+rmiColor = rmi > obLevel ? #0ebb23 : rmi < osLevel ? #ff0000 : #f4b77d
+plot(rmi, title="RMI", linewidth=2, color=rmiColor)
+
+transparent = color(color.white, 100)
+
+maxLevelPlot = hline(100, title="Max Level", linestyle=dotted, color=transparent)
+obLevelPlot = hline(obLevel, title="Overbought Level", linestyle=dotted)
+hline(50, title="Middle Level", linestyle=dotted)
+osLevelPlot = hline(osLevel, title="Oversold Level", linestyle=dotted)
+minLevelPlot = hline(0, title="Min Level", linestyle=dotted, color=transparent)
+
+fill(obLevelPlot, osLevelPlot, color=color.purple)
+
+obFillColor = rmi > obLevel and highlightBreakouts ? color.green : transparent
+osFillColor = rmi < osLevel and highlightBreakouts ? color.red : transparent
+
+fill(maxLevelPlot, obLevelPlot, color=obFillColor)
+fill(minLevelPlot, osLevelPlot, color=osFillColor)

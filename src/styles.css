@@ -1,0 +1,2767 @@
+:root {
+  /* ============================================================
+     OMEGA Design Tokens — Single Source of Truth
+     All colors, spacing, typography, radii defined here.
+     Theme switching via body[data-theme="light|dark"] (JS toggled)
+     ============================================================ */
+
+  /* Dark theme (default): NinjaTrader-inspired midnight blue. */
+  --omega-bg: #101d30;
+  --omega-surface: #162842;
+  --omega-elevated: #203957;
+  --omega-text: #f1f6ff;
+  --omega-muted: #b7c8de;
+  --omega-border: #3c5879;
+  --omega-accent: #4d9cff;
+  --omega-accent-hover: #7ab7ff;
+  --omega-error: #f23645;
+  --omega-success: #10b981;
+  --omega-warning: #f59e0b;
+
+  /* Font sizes */
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 13px;
+  --font-size-lg: 15px;
+  --font-size-xl: 16px;
+
+  /* Spacing */
+  --space-xs: 2px;
+  --space-sm: 4px;
+  --space-md: 8px;
+  --space-lg: 12px;
+  --space-xl: 16px;
+
+  /* Radius */
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+
+  /* Z-index scale */
+  --z-dropdown: 1000;
+  --z-modal-backdrop: 10000;
+  --z-modal: 10001;
+  --z-tooltip: 10002;
+  --z-toast: 10003;
+  --omega-platform-scale: 1;
+}
+
+/* Light theme — activated by JS: document.body.dataset.theme = 'light' */
+body[data-theme="light"] {
+  --omega-bg: #ffffff;
+  --omega-surface: #f8fafc;
+  --omega-elevated: #e2e8f0;
+  --omega-text: #111827;
+  --omega-muted: #475569;
+  --omega-border: #cbd5e1;
+  --omega-accent: #1d4ed8;
+  --omega-accent-hover: #1e40af;
+  --omega-error: #ef4444;
+  --omega-success: #22c55e;
+  --omega-warning: #f59e0b;
+}
+
+body[data-theme-variant="high-contrast"] {
+  --omega-bg: #ffffff;
+  --omega-surface: #f0f6ff;
+  --omega-elevated: #dceaff;
+  --omega-text: #061a33;
+  --omega-muted: #263e5a;
+  --omega-border: #17395d;
+  --omega-accent: #0047ab;
+  --omega-accent-hover: #003780;
+  --omega-error: #b00020;
+  --omega-success: #005a35;
+  --omega-warning: #6e4700;
+}
+
+body[data-theme-variant="high-contrast-dark"] {
+  --omega-bg: #101d30;
+  --omega-surface: #162842;
+  --omega-elevated: #203957;
+  --omega-text: #f5f9ff;
+  --omega-muted: #d2e1f5;
+  --omega-border: #9bbde5;
+  --omega-accent: #70b7ff;
+  --omega-accent-hover: #a1d0ff;
+  --omega-error: #ff6473;
+  --omega-success: #00c98d;
+  --omega-warning: #ffd166;
+}
+
+body[data-theme-variant^="high-contrast"] :is(button, input, select, textarea, [role="button"], summary) {
+  outline-color: var(--omega-accent);
+}
+
+body[data-theme-variant^="high-contrast"] :is(button, input, select, textarea, summary) {
+  border-color: var(--omega-border);
+}
+
+body[data-theme-variant^="high-contrast"] :is(button, input, select, textarea):focus-visible,
+body[data-theme-variant^="high-contrast"] summary:focus-visible {
+  outline: 3px solid var(--omega-accent);
+  outline-offset: 2px;
+}
+
+.vela-workspace .vela-panel,
+#editor-drawer,
+#console-panel,
+#pine-reference,
+#pine-ai-assistant,
+#omega-trading-pane {
+  border: 1px solid var(--omega-border);
+}
+
+/* ============================================================
+   Global Reset & Base Styles
+   ============================================================ */
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+  background-color: var(--omega-bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--omega-text);
+  -webkit-user-select: none;
+  user-select: none;
+  font-size: var(--font-size-base);
+  line-height: 1.45;
+}
+
+/* Accessibility: Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--omega-accent);
+  outline-offset: 2px;
+}
+
+/* Allow text selection in inputs, editors, consoles */
+input, textarea, select, [contenteditable="true"],
+.monaco-editor, .monaco-editor *,
+#console-output, #console-activity-output, #pine-console-output {
+  -webkit-user-select: text;
+  user-select: text;
+}
+      input, textarea, select, [contenteditable="true"],
+      .monaco-editor, .monaco-editor *,
+      #console-output, #console-activity-output, #pine-console-output {
+        -webkit-user-select: text;
+        user-select: text;
+      }
+      #app-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+
+/* UI scale deliberately excludes #chart: candle geometry, price scale and
+   cursor coordinates must remain exactly unchanged. Fixed toolbar shells keep
+   the chart in the same place while their controls become more readable. */
+#top-toolbar .toolbar-control-zone,
+#top-toolbar > .trading-account-status,
+#bottom-bar > *,
+#editor-drawer > *,
+#app-container [role="dialog"] > *,
+#app-container .modal-card,
+#omega-neural-network-lab .omega-nn-card {
+  zoom: var(--omega-platform-scale);
+}
+
+      /* FIX: height: 100% removed — was overriding flex sizing */
+      #chart-wrapper {
+        flex: 1 1 0%;
+        min-height: 0;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #chart {
+        flex: 1 1 0%;
+        min-height: 0;
+        width: 100%;
+        position: relative;
+        z-index: 0;
+      }
+      #chart-grid { flex: 1 1 0%; min-height: 0; width: 100%; position: relative; z-index: 0; }
+      #chart-stage {
+        display: flex;
+        flex: 1 1 0%;
+        min-width: 0;
+        min-height: 0;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+      #chart-stage > #chart {
+        flex: 0 0 auto;
+        min-width: 0;
+        height: 100%;
+      }
+      #chart-tabs-bar {
+        height: 30px;
+        min-height: 30px;
+        padding: 0 var(--space-sm); gap: var(--space-xs);
+        background: var(--omega-surface); border-bottom: 1px solid var(--omega-border);
+        display: flex; align-items: stretch; overflow: hidden;
+      }
+      #chart-tabs-bar[hidden] { display: none; }
+      #chart-tabs-list { min-width: 0; max-width: calc(100% - 32px); flex: 0 1 auto; gap: var(--space-xs); display: flex; align-items: center; overflow-x: auto; scrollbar-width: thin; }
+      .chart-tab {
+        min-width: 0; max-width: 220px; height: 25px; padding: 0 3px 0 0; gap: 2px;
+        color: var(--omega-muted); background: transparent; border: 1px solid transparent; border-radius: var(--radius-md);
+        font-size: var(--font-size-xs); white-space: nowrap; cursor: pointer; display: inline-flex; align-items: center;
+      }
+      .chart-tab:hover { color: var(--omega-text); background: var(--omega-elevated); }
+      .chart-tab[aria-selected="true"] { color: var(--omega-text); background: var(--omega-elevated); border-color: var(--omega-border); }
+      .chart-tab-activate { min-width: 0; height: 100%; padding: 0 var(--space-md); gap: 6px; color: inherit; background: transparent; border: 0; cursor: pointer; display: inline-flex; align-items: center; font: inherit; }
+      .chart-tab-close { width: 19px; height: 19px; padding: 0; color: var(--omega-muted); background: transparent; border: 0; border-radius: var(--radius-sm); cursor: pointer; font-size: 16px; line-height: 1; }
+      .chart-tab-close:hover { color: var(--omega-text); background: color-mix(in srgb, var(--omega-error) 20%, transparent); }
+      .chart-tab-activate:focus-visible, .chart-tab-close:focus-visible, .chart-tab-add:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: -2px; }
+      .chart-tab-group { width: 7px; height: 7px; flex: 0 0 auto; border: 1px dashed var(--omega-muted); border-radius: 50%; }
+      .chart-tab-label { overflow: hidden; text-overflow: ellipsis; }
+      .chart-tab-add {
+        width: 26px; margin: 2px 0; color: var(--omega-text); background: var(--omega-elevated); border: 1px solid var(--omega-border);
+        border-radius: var(--radius-md); font-size: 17px; line-height: 1; cursor: pointer;
+      }
+      .chart-tab-add:hover:not(:disabled) { color: var(--omega-text); background: var(--omega-border); border-color: var(--omega-accent); }
+      .chart-tab-add:disabled { opacity: .45; cursor: not-allowed; }
+      #chart-grid.omega-tabs-mode .vela-cell { visibility: hidden; pointer-events: none; z-index: 0 !important; }
+      #chart-grid.omega-tabs-mode .vela-cell[data-omega-tab-active="true"] { visibility: visible; pointer-events: auto; z-index: 10 !important; isolation: isolate; }
+      #chart-grid.omega-tabs-mode .vela-cell[data-omega-tab-active="true"] .vela-ui-layer { visibility: visible; pointer-events: auto; z-index: 1000000 !important; }
+      #chart-grid.omega-tabs-mode .vela-workspace > .vela-ui-layer { visibility: visible !important; pointer-events: auto !important; z-index: 1000001 !important; }
+      
+      /* Chart cells in workspace */
+      .vela-cell {
+        box-sizing: border-box;
+        position: relative !important;
+        transition: box-shadow 0.15s ease;
+      }
+
+      /* Top accent strip indicating chart's group color */
+      .vela-cell[data-group-color]::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background-color: var(--vela-cell-group-color, transparent);
+        z-index: 22;
+        pointer-events: none;
+      }
+
+      /* Selected / Active Chart Highlight Border */
+      /* Renders on top of the chart canvas stack so borders are vivid and clearly visible */
+      .vela-ws-grid .vela-cell[data-active='1']::after,
+      .vela-cell[data-omega-active="true"]::after {
+        content: '' !important;
+        position: absolute !important;
+        inset: 0 !important;
+        border: 2.5px solid var(--active-chart-border, #2962ff) !important;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.45), 0 0 14px var(--active-chart-glow, rgba(41, 98, 255, 0.4)) !important;
+        pointer-events: none !important;
+        z-index: 25 !important;
+        display: block !important;
+        border-radius: 2px !important;
+      }
+
+      /* Vela's popovers/menus sit in a `vela-ui-layer` that isolates its own
+         stacking context at z-index auto. Without this, the active-chart border
+         (z 25) paints over the chart context menu. Keep the highlight below
+         every workspace/UI overlay layer. */
+      .vela-workspace > .vela-ui-layer {
+        z-index: 50 !important;
+      }
+      .vela-workspace .vela-cell .vela-ui-layer {
+        z-index: 30 !important;
+      }
+
+      #editor-drawer[hidden],
+      #resize-handle[hidden],
+      .bottom-tab-btn[hidden],
+      #broker-modal[hidden],
+      #mt5-feed-modal[hidden],
+      #alpaca-feed-modal[hidden] { display: none !important; }
+
+      .bars-select:hover, .script-select:hover { border-color: var(--omega-accent); }
+      .dock-pill label { white-space: nowrap; }
+      .dock-pill select { min-width: 86px; }
+
+      /* Generic button */
+      .btn {
+        background: var(--omega-elevated);
+        color: var(--omega-text);
+        border: 1px solid var(--omega-border);
+        border-radius: var(--radius-md);
+        padding: var(--space-xs) var(--space-md);
+        font-size: var(--font-size-sm);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-xs);
+        transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+      }
+      .btn:hover { background: var(--omega-border); color: var(--omega-text); }
+      .btn:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: 2px; }
+      .btn-primary { background: var(--omega-accent); border-color: var(--omega-accent); color: var(--omega-text); }
+      .btn-primary:hover { background: var(--omega-accent-hover); }
+      .btn-danger  { background: color-mix(in srgb, var(--omega-error) 15%, transparent); border-color: var(--omega-error); color: var(--omega-error); }
+      .btn-danger:hover  { background: var(--omega-error); color: var(--omega-text); }
+
+      .vela-source-btn {
+        background: transparent; border: none; color: var(--omega-muted);
+        padding: var(--space-xs) var(--space-sm); margin: 0 var(--space-xs); border-radius: var(--radius-sm); cursor: pointer;
+        display: inline-flex; align-items: center; justify-content: center;
+        vertical-align: middle; transition: all var(--transition-fast);
+      }
+      .vela-source-btn:hover { color: var(--omega-accent) !important; background: color-mix(in srgb, var(--omega-accent) 15%, transparent); }
+      .vela-source-btn:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: 2px; }
+
+      /* Resize Bar — FIX: added position: relative so z-index works */
+      #resize-handle {
+        height: 5px;
+        background: var(--omega-elevated);
+        cursor: row-resize;
+        display: none;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 25;
+      }
+      #resize-handle:hover, #resize-handle.resizing { background: var(--omega-accent); }
+
+      /* Editor Drawer — FIX: added position: relative so z-index works */
+      #editor-drawer {
+        height: 320px;
+        min-height: 120px;
+        max-height: 70vh;
+        background: var(--omega-bg);
+        border: 1px solid var(--omega-border);
+        display: none;
+        flex-direction: column;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 30;
+      }
+
+      .editor-toolbar {
+        height: 36px;
+        background: var(--omega-surface);
+        border-bottom: 1px solid var(--omega-elevated);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 var(--space-md);
+      }
+      .toolbar-group { display: flex; align-items: center; gap: var(--space-sm); }
+
+      .script-select, .bars-select {
+        background: var(--omega-elevated); color: var(--omega-text);
+        border: 1px solid var(--omega-border); border-radius: var(--radius-md);
+        padding: var(--space-xs) var(--space-sm); font-size: var(--font-size-sm); outline: none; cursor: pointer;
+      }
+      .script-select:focus-visible, .bars-select:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: 2px; }
+
+      #editor-workspace {
+        flex: 1; min-height: 0; width: 100%;
+        overflow: hidden; background: var(--omega-bg); position: relative; display: flex; flex-direction: column;
+      }
+      #editor-top {
+        flex: 1; min-height: 0; width: 100%; display: flex; overflow: hidden; position: relative;
+      }
+      #code-editor {
+        flex: 1; min-width: 0; height: 100%;
+      }
+
+      /* Console Panel Styles */
+      #console-divider {
+        height: 5px; background: var(--omega-elevated); cursor: row-resize; flex-shrink: 0; display: block;
+        position: relative; z-index: 25;
+      }
+      #console-divider:hover, #console-divider.resizing { background: var(--omega-accent); }
+
+      #console-panel {
+        height: 200px; min-height: 80px; max-height: 50vh; background: var(--omega-bg);
+        border: 1px solid var(--omega-border); display: flex; flex-direction: column; flex-shrink: 0;
+        position: relative; z-index: 24;
+      }
+
+      .console-header {
+        height: 28px; background: var(--omega-surface); border-bottom: 1px solid var(--omega-elevated);
+        display: flex; align-items: center; justify-content: space-between; padding: 0 var(--space-sm); flex-shrink: 0;
+      }
+      .console-header-title {
+        font-size: var(--font-size-xs); font-weight: 700; color: var(--omega-muted); letter-spacing: 0.05em; text-transform: uppercase;
+      }
+      .console-header-actions {
+        display: flex; gap: var(--space-xs); align-items: center;
+      }
+      .console-split {
+        min-height: 0; flex: 1; display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+      .console-section { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+      .console-section + .console-section { border-left: 1px solid var(--omega-elevated); }
+      .console-section-header {
+        height: 24px; padding: 0 var(--space-sm); flex-shrink: 0;
+        display: flex; align-items: center; justify-content: space-between;
+        color: var(--omega-muted); border-bottom: 1px solid var(--omega-elevated);
+        font-size: var(--font-size-xs); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+      }
+      .console-btn {
+        background: none; border: none; color: var(--omega-muted); font-size: var(--font-size-xs);
+        padding: var(--space-xs) var(--space-sm); cursor: pointer; border-radius: var(--radius-sm); transition: all var(--transition-fast);
+      }
+      .console-btn:hover { background: var(--omega-elevated); color: var(--omega-accent); }
+      .console-btn:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: 2px; }
+
+      #console-output, #console-activity-output {
+        flex: 1; overflow-y: auto; padding: var(--space-sm) var(--space-md); font-family: Consolas, monospace;
+        font-size: var(--font-size-xs); line-height: 1.5; color: var(--omega-muted); white-space: pre-wrap; word-break: break-word;
+      }
+      .console-line {
+        margin: var(--space-xs) 0; display: flex; gap: var(--space-md);
+      }
+      .console-line-icon {
+        flex-shrink: 0; width: 16px; text-align: center;
+      }
+      .console-line.error .console-line-icon { color: var(--omega-error); }
+      .console-line.warning .console-line-icon { color: var(--omega-warning); }
+      .console-line.info .console-line-icon { color: var(--omega-accent); }
+      .console-line.success .console-line-icon { color: var(--omega-success); }
+      .console-line.error { color: var(--omega-error); }
+      .console-line.warning { color: var(--omega-warning); }
+      .console-line.success { color: var(--omega-success); }
+      @media (width <= 640px) {
+        .console-split { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
+        .console-section + .console-section { border-top: 1px solid var(--omega-elevated); border-left: 0; }
+      }
+      #pine-reference {
+		--pine-reference-font-size: var(--font-size-base);
+        width: 320px; min-width: 250px; max-width: 60%; height: 100%;
+        flex: 0 0 auto; display: flex; flex-direction: column; background: var(--omega-surface);
+        border: 1px solid var(--omega-border); color: var(--omega-text);
+      }
+      .pine-reference-heading, .pine-ai-heading {
+        min-height: 42px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-md);
+        padding: var(--space-md) var(--space-md); border-bottom: 1px solid var(--omega-border);
+      }
+      .pine-reference-heading strong, .pine-ai-heading strong { font-size: var(--font-size-lg); }
+      #pine-reference[hidden], #pine-ai-assistant[hidden], #pine-ai-history[hidden] { display: none; }
+      #pine-reference-resize {
+        flex: 0 0 8px; width: 8px; cursor: col-resize; background: var(--omega-elevated);
+        border-left: 1px solid var(--omega-border); border-right: 1px solid var(--omega-border); touch-action: none;
+      }
+      #pine-reference-resize:hover, #pine-reference-resize.dragging { background: var(--omega-accent); }
+      #pine-ai-resize {
+        flex: 0 0 9px; width: 9px; cursor: col-resize; background: var(--omega-elevated);
+        border-left: 1px solid var(--omega-border); border-right: 1px solid var(--omega-border); touch-action: none;
+      }
+      #pine-ai-resize:hover, #pine-ai-resize.dragging { background: var(--omega-accent); }
+      #pine-reference-search {
+        margin: var(--space-md); padding: var(--space-md) var(--space-md); color: var(--omega-text); background: var(--omega-bg);
+        border: 1px solid var(--omega-border); border-radius: var(--radius-md); outline: none;
+      }
+      #pine-reference-search:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: 2px; }
+      #pine-reference-list { overflow: auto; padding: 0 var(--space-md) var(--space-md); }
+      .pine-reference-item {
+        width: 100%; display: flex; flex-direction: column; gap: var(--space-xs); padding: var(--space-md);
+        text-align: left; color: var(--omega-text); background: transparent;
+        border: 0; border-bottom: 1px solid var(--omega-border); cursor: pointer;
+      }
+      .pine-reference-item:hover { background: var(--omega-elevated); }
+      .pine-reference-item:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: -2px; }
+      .pine-reference-item { font-size: var(--pine-reference-font-size); }
+      .pine-reference-item code, .pine-reference-item span { color: var(--omega-muted); font-size: inherit; }
+      .pine-reference-item small { color: var(--omega-muted); font-size: calc(var(--pine-reference-font-size) * .85); }
+      .pine-reference-category { padding: var(--space-md) 0 var(--space-xs); margin-top: var(--space-xs); border-bottom: 1px solid var(--omega-border); color: var(--omega-muted); font-size: var(--pine-reference-font-size); font-weight: 700; text-transform: uppercase; }
+      .pine-reference-manual { padding: var(--space-md) 0; color: var(--omega-text); font-size: calc(var(--pine-reference-font-size) * 1.15); line-height: 1.65; }
+      .pine-reference-manual-title { padding: var(--space-md) 0 var(--space-xs); color: var(--omega-text); font-size: calc(var(--pine-reference-font-size) * 1.35); font-weight: 700; }
+      .pine-reference-code { margin: var(--space-md) 0; overflow-x: auto; padding: var(--space-md); border: 1px solid var(--omega-border); border-radius: var(--radius-md); background: var(--omega-bg); color: var(--omega-text); font: calc(var(--pine-reference-font-size) * 1.1)/1.6 Consolas, monospace; }
+      .pine-reference-pine-code { color: var(--omega-accent); }
+      .pine-reference-subheading { margin: var(--space-lg) 0 var(--space-xs); color: var(--omega-muted); font-size: var(--pine-reference-font-size); text-transform: uppercase; }
+      .pine-reference-heading-text { margin: 0 0 var(--space-md); color: var(--omega-text); font-size: calc(var(--pine-reference-font-size) * 1.35); font-weight: 700; }
+      .pine-reference-list-item { display: flex; gap: var(--space-sm); margin: var(--space-xs) 0; padding-left: var(--space-lg); color: var(--omega-text); }
+      .pine-reference-list-item strong { color: var(--omega-accent); }
+      .pine-reference-inline-code { padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); background: var(--omega-elevated); color: var(--omega-accent); font: var(--pine-reference-font-size) Consolas, monospace; }
+      .pine-reference-manual hr { margin: var(--space-lg) 0; border: 0; border-top: 1px solid var(--omega-border); }
+      #pine-ai-assistant {
+        width: 520px; min-width: 400px; max-width: 65%; height: 100%; padding: 0 var(--space-md) var(--space-md);
+        flex: 0 0 auto; display: flex; flex-direction: column; gap: var(--space-md); overflow: hidden; color: var(--omega-text);
+        background: var(--omega-surface); border: 1px solid var(--omega-border);
+      }
+      #pine-ai-assistant .pine-ai-heading { position: relative; z-index: 3; flex: 0 0 auto; margin: 0 calc(-1 * var(--space-md)); padding: var(--space-md) var(--space-md); background: var(--omega-surface); }
+      #pine-ai-conversation-title { margin: var(--space-xs) 0 0; color: var(--omega-muted); font-size: var(--font-size-sm); }
+      .pine-ai-model-status {
+        display: inline-block; max-width: 100%; margin-left: var(--space-md); color: var(--omega-muted); font-size: var(--font-size-sm);
+        font-weight: 500; overflow: hidden; text-overflow: ellipsis; vertical-align: baseline; white-space: nowrap;
+      }
+      .pine-ai-model-status[data-state="ready"] { color: var(--omega-success); }
+      .pine-ai-model-status[data-state="setup"] { color: var(--omega-warning); }
+      .pine-ai-model-status[data-state="unknown"] { color: var(--omega-muted); }
+      #pine-ai-status { flex: 0 0 auto; margin: 0; color: var(--omega-muted); font-size: var(--font-size-base); line-height: 1.4; }
+      #pine-ai-status[data-state="error"] { color: var(--omega-error); }
+      .pine-ai-field { display: grid; gap: var(--space-xs); color: var(--omega-text); font-size: var(--font-size-base); }
+      .pine-ai-field input, .pine-ai-field select, .pine-ai-field textarea {
+        width: 100%; min-width: 0; padding: var(--space-md) var(--space-md); color: var(--omega-text); background: var(--omega-bg);
+        border: 1px solid var(--omega-border); border-radius: var(--radius-md); font: inherit;
+      }
+      .pine-ai-field input:focus-visible, .pine-ai-field select:focus-visible, .pine-ai-field textarea:focus-visible {
+        outline: 2px solid var(--omega-accent); outline-offset: 2px;
+      }
+      .pine-ai-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--space-xs); }
+      .pine-ai-toolbar .btn, #pine-ai-assistant .btn { flex: 0 0 auto; font-size: var(--font-size-base); padding: var(--space-sm) var(--space-md); }
+      #pine-ai-chat {
+        min-height: 0; flex: 1 1 auto; display: flex; flex-direction: column; gap: var(--space-lg); overflow: auto;
+        padding: var(--space-md); border: 1px solid var(--omega-border); border-radius: var(--radius-lg); background: var(--omega-bg);
+      }
+      .pine-ai-empty-state {
+        flex: 1 0 100%; min-height: 140px; display: flex; flex-direction: column; justify-content: center;
+        align-items: center; gap: var(--space-md); padding: var(--space-xl); color: var(--omega-text); text-align: center;
+      }
+      .pine-ai-empty-state strong { font-size: var(--font-size-xl); }
+      .pine-ai-empty-state p { max-width: 360px; margin: 0; color: var(--omega-muted); font-size: var(--font-size-base); line-height: 1.6; }
+      .pine-ai-message { max-width: 100%; padding: var(--space-md); border: 1px solid var(--omega-border); border-radius: var(--radius-lg); font-size: var(--font-size-lg); line-height: 1.6; overflow-wrap: anywhere; }
+      .pine-ai-message[data-role="user"] { align-self: flex-end; width: min(92%, 620px); background: color-mix(in srgb, var(--omega-accent) 15%, var(--omega-bg)); border-color: var(--omega-accent); }
+      .pine-ai-message[data-role="assistant"] { align-self: stretch; background: var(--omega-elevated); }
+      .pine-ai-message-label { margin: 0 0 var(--space-xs); color: var(--omega-muted); font-size: var(--font-size-sm); font-weight: 700; }
+      .pine-ai-message-text { white-space: pre-wrap; }
+      .pine-ai-code { margin: var(--space-md) 0 0; overflow: hidden; border: 1px solid var(--omega-border); border-radius: var(--radius-md); background: var(--omega-bg); }
+      .pine-ai-code-header { display: flex; align-items: center; justify-content: space-between; padding: var(--space-xs) var(--space-md); color: var(--omega-text); background: var(--omega-elevated); font-size: var(--font-size-sm); }
+      .pine-ai-code pre { max-height: 380px; overflow: auto; margin: 0; padding: var(--space-md); color: var(--omega-text); font: var(--font-size-base)/1.55 Consolas, "Cascadia Code", monospace; white-space: pre; }
+      .pine-ai-code-actions { display: flex; gap: var(--space-sm); padding: 0 var(--space-md) var(--space-md); }
+      .pine-ai-code-actions .btn { font-size: var(--font-size-sm); }
+      #pine-ai-history { max-height: 230px; overflow: auto; padding: var(--space-md); border: 1px solid var(--omega-border); border-radius: var(--radius-md); background: var(--omega-bg); }
+      .pine-ai-history-item { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-xs) 0; border-bottom: 1px solid var(--omega-border); }
+      .pine-ai-history-item:last-child { border-bottom: 0; }
+      .pine-ai-history-open { flex: 1; min-width: 0; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+      #pine-ai-conversation-title { margin: 0; color: var(--omega-text); font-size: var(--font-size-lg); }
+      #pine-ai-settings { position: static; flex: 0 0 auto; }
+      #pine-ai-settings summary { list-style: none; cursor: pointer; }
+      #pine-ai-settings summary::-webkit-details-marker { display: none; }
+      #pine-ai-settings summary.active {
+        background: var(--omega-accent);
+        color: var(--omega-text);
+        border-color: var(--omega-accent);
+      }
+      .pine-ai-settings-panel {
+        position: absolute; top: calc(100% + var(--space-md)); right: var(--space-md); z-index: 4; width: min(360px, calc(100vw - 32px));
+        max-height: min(70vh, 460px); overflow: auto; display: grid; gap: 10px; padding: 12px;
+        color: var(--omega-text); background: var(--omega-surface); border: 1px solid var(--omega-border); border-radius: 8px;
+        box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
+      }
+      .pine-ai-row { display: flex; align-items: end; gap: 8px; }
+      .pine-ai-row > * { flex: 1 1 0; min-width: 0; }
+      .pine-ai-settings-panel .pine-ai-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+      .pine-ai-settings-panel .pine-ai-row > .btn,
+      #pine-ai-test-key,
+      #pine-ai-clear-local-key {
+        width: 100%; min-width: 0; justify-content: center; text-align: center; white-space: normal; line-height: 1.25;
+      }
+      #pine-ai-composer {
+        flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding: 8px;
+        border: 1px solid var(--omega-border); border-radius: 10px; background: var(--omega-bg);
+      }
+      #pine-ai-luxalgo-option {
+        display: flex; align-items: center; gap: var(--space-sm); color: var(--omega-muted);
+        font-size: var(--font-size-base); cursor: pointer;
+      }
+      #pine-ai-luxalgo-enabled { accent-color: var(--omega-accent); }
+      #pine-ai-prompt {
+        flex: 1 1 auto; min-width: 0; min-height: 54px; max-height: 180px; resize: vertical;
+        padding: 8px; color: var(--omega-text); background: transparent; border: 0; outline: none;
+        font: inherit; line-height: 1.45;
+      }
+      #pine-ai-ask { align-self: center; }
+      @media (max-width: 1000px) { #pine-ai-assistant { width: 440px; min-width: 340px; max-width: 65%; } }
+      @media (max-width: 700px) {
+        #pine-reference { width: 200px; min-width: 160px; }
+      }
+      #indicator-browser-modal {
+        --panel: var(--omega-surface);
+        --sunken: var(--omega-elevated);
+        --hover: color-mix(in srgb, var(--omega-text) 6%, transparent);
+        --active: color-mix(in srgb, var(--omega-text) 10%, transparent);
+        --line: var(--omega-border);
+        --line-strong: var(--omega-border);
+        --text: var(--omega-text);
+        --bright: var(--omega-text);
+        --muted: var(--omega-muted);
+        --focus: color-mix(in srgb, var(--omega-accent) 50%, transparent);
+        --mark: color-mix(in srgb, var(--omega-warning) 22%, transparent);
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        --raised: color-mix(in srgb, var(--text) 5%, transparent);
+        --faint: color-mix(in srgb, var(--muted) 72%, var(--panel));
+        --primary: var(--bright);
+        --primary-text: var(--panel);
+        --sans: var(--vela-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+        color-scheme: dark;
+        position: fixed; inset: 0; z-index: var(--z-modal-backdrop); display: none;
+        align-items: center; justify-content: center; padding: var(--space-md); background: rgba(5, 8, 14, 0.68);
+      }
+      body[data-theme="light"] #indicator-browser-modal {
+        color-scheme: light;
+        background: rgba(19, 23, 34, 0.28);
+      }
+      #indicator-browser-modal.open { display: flex; }
+      #indicator-browser {
+        width: min(1120px, 98vw); height: min(720px, 96vh); display: flex; flex-direction: column;
+        overflow: hidden; color: var(--text); background: var(--panel); border: 1px solid var(--line);
+        border-radius: 10px; box-shadow: var(--shadow); font: 13px/1.4 var(--sans); -webkit-font-smoothing: antialiased;
+      }
+      #indicator-browser-header { height: 52px; display: flex; align-items: center; gap: 14px; padding: 0 16px; border-bottom: 1px solid var(--line); }
+      #indicator-browser-header strong { width: 168px; flex-shrink: 0; color: var(--bright); font-size: 15px; font-weight: 600; white-space: nowrap; }
+      #indicator-browser-search { flex: 1; min-width: 100px; padding: 9px 12px; color: var(--text); background: var(--raised); border: 1px solid transparent; border-radius: 8px; font: inherit; }
+      #indicator-browser-search:hover { background: color-mix(in srgb, var(--text) 7%, transparent); }
+      #indicator-browser-search:focus { border-color: var(--line-strong); background: var(--panel); outline: 2px solid var(--focus); outline-offset: 1px; }
+      #indicator-browser-body { flex: 1; min-height: 0; display: grid; grid-template-columns: 160px minmax(300px, 1fr) 260px; }
+      #indicator-browser-categories { overflow: auto; padding: 12px 8px; border-right: 1px solid var(--line); scrollbar-width: thin; }
+      .indicator-category { width: 100%; padding: 9px 10px; text-align: left; color: var(--muted); background: transparent; border: 0; border-radius: 6px; cursor: pointer; font: inherit; }
+      .indicator-category:hover { color: var(--text); background: var(--hover); }
+      .indicator-category.active { color: var(--bright); background: var(--active); }
+      #indicator-browser-results { min-height: 0; display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid var(--line); }
+      #indicator-browser-results h2 { margin: 16px 18px 12px; color: var(--bright); font-size: 14px; }
+      #indicator-browser-grid { min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); align-content: start; gap: 10px; padding: 0 14px 16px; scrollbar-width: thin; }
+      .indicator-card { min-height: 135px; position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 12px; cursor: pointer; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+      .indicator-card:hover { background: var(--hover); border-color: var(--line-strong); }
+      .indicator-card.selected { background: var(--active); border-color: var(--line-strong); }
+      .indicator-card-title { color: var(--bright); font-size: 13px; line-height: 1.35; }
+      .indicator-card-category { color: var(--muted); font-size: 11px; }
+      .indicator-card-description { display: -webkit-box; overflow: hidden; color: var(--muted); font-size: 11px; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+      .indicator-favorite { position: absolute; top: 8px; right: 8px; border: 0; color: var(--muted); background: var(--raised); border-radius: 4px; font-size: 16px; cursor: pointer; }
+      .indicator-favorite.active { color: #d5a900; }
+      .indicator-empty { grid-column: 1/-1; padding: 28px; color: var(--muted); text-align: center; }
+      #indicator-browser-detail { min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 16px; scrollbar-width: thin; }
+      .indicator-detail-category { color: var(--muted); font-size: 11px; }
+      .indicator-detail-title { margin: 0; color: var(--bright); font-size: 18px; }
+      .indicator-detail-description { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+      .indicator-source-preview { min-height: 120px; flex: 1; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: 10px; color: var(--text); background: var(--sunken); border: 1px solid var(--line); border-radius: 6px; font: 10px/1.5 ui-monospace, "SF Mono", Consolas, monospace; }
+      .indicator-add-button { flex: 0 0 auto; padding: 10px; color: var(--primary-text); background: var(--primary); border: 0; border-radius: 6px; font-weight: 700; cursor: pointer; }
+      .indicator-add-button:disabled { opacity: .5; cursor: not-allowed; }
+      .indicator-detail-settings { min-height: 0; max-height: 35%; overflow: auto; display: grid; gap: 8px; padding: 8px 0; border-top: 1px solid var(--line); }
+      .indicator-detail-settings strong { color: var(--bright); font-size: 12px; }
+      .indicator-setting-row { display: grid; gap: 4px; color: var(--muted); font-size: 11px; }
+      .indicator-setting-row input, .indicator-setting-row select { width: 100%; padding: 6px; color: var(--text); background: var(--sunken); border: 1px solid var(--line); border-radius: 4px; font: inherit; }
+      .indicator-browser-status { color: #d34b4b; font-size: 11px; }
+      #indicator-browser-footer { height: 32px; display: flex; align-items: center; justify-content: flex-end; padding: 0 12px; color: var(--muted); border-top: 1px solid var(--line); font-size: 11px; }
+      @media (max-width: 760px) {
+        #indicator-browser-body { grid-template-columns: 125px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(200px, 0.65fr); }
+        #indicator-browser-results { border-right: 0; }
+        #indicator-browser-detail { display: flex; grid-column: 1 / -1; border-top: 1px solid var(--line); }
+      }
+      .editor-status {
+        max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        color: var(--omega-muted); font-size: 11px;
+      }
+      .editor-status[data-state="error"] { color: var(--omega-error); }
+
+      #broker-modal {
+        position: fixed; inset: 0; z-index: var(--z-modal-backdrop); display: none;
+        align-items: center; justify-content: center; padding: var(--space-md); background: rgba(5, 8, 14, 0.72);
+      }
+      #broker-modal.open { display: flex; }
+      #mt5-feed-modal {
+        position: fixed; inset: 0; z-index: var(--z-modal-backdrop); display: none;
+        align-items: center; justify-content: center; padding: var(--space-md); background: rgba(5, 8, 14, 0.72);
+      }
+      #mt5-feed-modal.open { display: flex; }
+      #mt5-feed-dialog {
+        width: min(520px, 96vw); max-height: 94vh; display: flex; flex-direction: column;
+        overflow: hidden; color: var(--omega-text); background: var(--omega-surface); border: 1px solid var(--omega-border);
+        border-radius: var(--radius-lg); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+      }
+      #mt5-feed-header { min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding: 0 var(--space-lg); border-bottom: 1px solid var(--omega-border); }
+      #mt5-feed-body { overflow: auto; padding: var(--space-lg); }
+      #mt5-feed-body p { font-size: var(--font-size-sm); line-height: 1.5; }
+      #mt5-python-path { width: 100%; min-width: 0; padding: var(--space-sm) var(--space-sm); color: var(--omega-text); background: var(--omega-bg); border: 1px solid var(--omega-border); border-radius: var(--radius-md); }
+      .mt5-feed-setup { color: var(--omega-muted); }
+      #mt5-feed-actions { display: flex; gap: var(--space-sm); margin-top: var(--space-lg); }
+      #mt5-feed-disconnect[hidden] { display: none; }
+      #mt5-feed-status { color: var(--omega-muted); font-size: var(--font-size-xs); line-height: 1.5; overflow-wrap: anywhere; }
+      #mt5-feed-status[data-state="error"] { color: var(--omega-error); }
+      #mt5-symbol-browser { margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid var(--omega-border); }
+      .mt5-symbol-browser-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); margin-bottom: var(--space-md); font-size: var(--font-size-sm); }
+      #mt5-symbol-search { width: 100%; min-width: 0; padding: var(--space-sm) var(--space-sm); color: var(--omega-text); background: var(--omega-bg); border: 1px solid var(--omega-border); border-radius: var(--radius-md); }
+      #mt5-symbol-search:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: 2px; }
+      #mt5-symbol-list { display: grid; gap: var(--space-xs); max-height: 240px; margin-top: var(--space-md); overflow: auto; }
+      .mt5-symbol-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); width: 100%; padding: var(--space-sm) var(--space-sm); color: var(--omega-text); text-align: left; background: var(--omega-bg); border: 1px solid var(--omega-border); border-radius: var(--radius-md); cursor: pointer; }
+      .mt5-symbol-row:hover { border-color: var(--omega-accent); }
+      .mt5-symbol-row:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: 2px; }
+      .mt5-symbol-row small { color: var(--omega-muted); }
+      .mt5-symbol-empty { color: var(--omega-muted); font-size: var(--font-size-xs); line-height: 1.5; }
+      #alpaca-feed-modal {
+        position: fixed; inset: 0; z-index: var(--z-modal-backdrop); display: none;
+        align-items: center; justify-content: center; padding: var(--space-md); background: rgba(5, 8, 14, 0.72);
+      }
+      #alpaca-feed-modal.open { display: flex; }
+      #alpaca-feed-dialog {
+        width: min(520px, 96vw); max-height: 94vh; display: flex; flex-direction: column;
+        overflow: hidden; color: var(--omega-text); background: var(--omega-surface); border: 1px solid var(--omega-border);
+        border-radius: var(--radius-lg); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+      }
+
+      body[data-pine-editor-surface="standalone"] #chart-wrapper,
+      body[data-pine-editor-surface="standalone"] #bottom-bar,
+      body[data-pine-editor-surface="standalone"] #resize-handle {
+        display: none !important;
+      }
+      body[data-pine-editor-surface="standalone"] #app-container {
+        height: 100vh;
+      }
+      body[data-pine-editor-surface="standalone"] #editor-drawer {
+        display: flex !important;
+        height: 100vh !important;
+        min-height: 0;
+        max-height: none;
+        border-top: 0;
+      }
+      body[data-pine-editor-surface="standalone"] #btn-close {
+        display: none;
+      }
+      #local-feeds-modal {
+        position: fixed; inset: 0; z-index: var(--z-modal-backdrop); display: flex;
+        align-items: center; justify-content: center; padding: var(--space-md); background: rgba(6, 12, 22, 0.7);
+      }
+      #local-feeds-modal[hidden] { display: none !important; }
+      #local-feeds-dialog {
+        width: min(460px, 96vw); overflow: hidden; color: var(--omega-text); background: var(--omega-surface);
+        border: 1px solid var(--omega-border); border-radius: var(--radius-lg); box-shadow: 0 12px 38px rgba(0, 0, 0, .5);
+      }
+      #local-feeds-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-lg); padding: var(--space-lg); border-bottom: 1px solid var(--omega-border); background: var(--omega-elevated); }
+      #local-feeds-header strong { display: block; font-size: var(--font-size-lg); }
+      #local-feeds-header p { margin: 2px 0 0; color: var(--omega-muted); font-size: var(--font-size-sm); }
+      #local-feeds-body { display: grid; gap: var(--space-md); padding: var(--space-lg); }
+      .local-feed-option { display: grid; gap: 4px; padding: var(--space-lg); color: var(--omega-text); text-align: left; background: var(--omega-bg); border: 1px solid var(--omega-border); border-radius: var(--radius-md); cursor: pointer; }
+      .local-feed-option:hover { border-color: var(--omega-accent); background: color-mix(in srgb, var(--omega-accent) 10%, var(--omega-bg)); }
+      .local-feed-option strong { font-size: var(--font-size-base); }
+      .local-feed-option span { color: var(--omega-muted); font-size: var(--font-size-sm); line-height: 1.45; }
+      #alpaca-feed-header { min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding: 0 var(--space-lg); border-bottom: 1px solid var(--omega-border); }
+      #alpaca-feed-body { overflow: auto; padding: var(--space-lg); }
+      #alpaca-feed-body p { font-size: var(--font-size-sm); line-height: 1.5; }
+      #alpaca-feed-body input { width: 100%; min-width: 0; padding: var(--space-sm) var(--space-sm); color: var(--omega-text); background: var(--omega-bg); border: 1px solid var(--omega-border); border-radius: var(--radius-md); }
+      #alpaca-feed-body input:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: 2px; }
+      .alpaca-feed-setup { color: var(--omega-muted); }
+      #alpaca-feed-actions { display: flex; gap: var(--space-sm); margin-top: var(--space-lg); }
+      #alpaca-feed-disconnect[hidden] { display: none; }
+      #alpaca-feed-status { color: var(--omega-muted); font-size: var(--font-size-xs); line-height: 1.5; overflow-wrap: anywhere; }
+      #alpaca-feed-status[data-state="error"] { color: var(--omega-error); }
+      #broker-dialog {
+        width: min(720px, 96vw); max-height: 94vh; display: flex; flex-direction: column;
+        overflow: hidden; color: var(--omega-text); background: var(--omega-surface); border: 1px solid var(--omega-border);
+        border-radius: 8px; box-shadow: 0 10px 40px rgb(0 0 0 / 0.55);
+      }
+      #broker-header { min-height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid var(--omega-border); }
+      #broker-body { overflow: auto; padding: 14px; }
+      #broker-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      #ctrader-account-controls, #ctrader-market-controls, #ctrader-permissions { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; margin: 10px 0; }
+      #ctrader-account-controls[hidden], #ctrader-market-controls[hidden], #ctrader-permissions[hidden], #ctrader-trade-controls[hidden] { display: none; }
+      .broker-field { min-width: 0; display: grid; gap: 4px; color: var(--omega-muted); font-size: 11px; }
+      .broker-field input, #broker-select, #ctrader-account-select, #ctrader-symbol-select { width: 100%; min-width: 0; padding: 7px 8px; color: var(--omega-text); background: var(--omega-bg); border: 1px solid var(--omega-border); border-radius: 4px; }
+      #ctrader-account-select, #ctrader-symbol-select { flex: 1 1 240px; }
+      #broker-setup-note, #broker-status, .broker-account-detail { color: var(--omega-muted); font-size: 11px; line-height: 1.5; }
+      .broker-safety-note { color: var(--omega-warning); font-size: 11px; line-height: 1.5; }
+      #broker-status[data-state="error"] { color: var(--omega-error); }
+      #broker-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+      #broker-accounts { max-height: 42vh; overflow: auto; display: grid; gap: 8px; }
+      .broker-account { padding: 10px; background: var(--omega-bg); border: 1px solid var(--omega-border); border-radius: 5px; }
+      .broker-account-heading { display: flex; justify-content: space-between; gap: 8px; }
+      .broker-account-heading span { color: var(--omega-muted); font-size: 10px; text-transform: uppercase; }
+      .broker-equity { margin: 8px 0; font-size: 14px; font-weight: 700; }
+      .broker-account-detail { margin: 5px 0; }
+      .broker-positions-title { display: block; margin-top: 8px; font-size: 11px; }
+      .broker-position-list { display: grid; gap: 4px; max-height: 120px; overflow: auto; padding-left: 18px; color: var(--omega-muted); font-size: 11px; }
+      #ctrader-trade-controls { display: grid; gap: 8px; margin: 10px 0; padding: 10px; border: 1px solid var(--omega-border); border-radius: 5px; }
+      #ctrader-trade-controls input, #ctrader-trade-controls select { min-width: 0; padding: 7px 8px; color: var(--omega-text); background: var(--omega-bg); border: 1px solid var(--omega-border); border-radius: 4px; }
+      .ctrader-trade-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .ctrader-trade-grid .broker-field { min-width: 0; }
+      .broker-permission { display: flex; gap: 7px; align-items: flex-start; color: var(--omega-warning); font-size: 11px; line-height: 1.5; }
+      #ctrader-trade-status { color: var(--omega-muted); font-size: 11px; }
+      #ctrader-trade-status[data-state="error"] { color: var(--omega-error); }
+      .ctrader-positions { display: grid; gap: 6px; border-top: 1px solid var(--omega-border); padding-top: 8px; }
+      .ctrader-positions-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; }
+      #ctrader-positions-list { display: grid; gap: 4px; color: var(--omega-muted); font-size: 11px; overflow-wrap: anywhere; }
+      #ctrader-positions-list[data-state="error"] { color: var(--omega-error); }
+      .ctrader-position-kind { color: var(--omega-muted); }
+      body[data-theme="light"] #broker-dialog { color: var(--omega-text); background: var(--omega-surface); border-color: var(--omega-border); }
+      body[data-theme="light"] #broker-header { border-color: var(--omega-border); }
+      body[data-theme="light"] .broker-field { color: var(--omega-muted); }
+      body[data-theme="light"] .broker-field input, body[data-theme="light"] #broker-select,
+      body[data-theme="light"] #ctrader-account-select, body[data-theme="light"] #ctrader-symbol-select,
+      body[data-theme="light"] .broker-account { color: var(--omega-text); background: var(--omega-bg); border-color: var(--omega-border); }
+      @media (max-width: 560px) { #broker-fields { grid-template-columns: 1fr; } }
+
+      /* Bottom Dock Bar — FIX: added position: relative so z-index works */
+      #bottom-bar {
+        height: 56px;
+        min-height: 56px;
+        background: var(--omega-surface);
+        border-top: 1px solid var(--omega-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 10px;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 40;
+      }
+      .bottom-bar-left {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: center;
+        min-width: 0;
+        padding-right: 16px;
+      }
+      .trading-session-status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        position: absolute;
+        left: 10px;
+        bottom: 57px;
+        z-index: 45;
+        max-width: min(620px, calc(100% - 32px));
+        padding: 7px 14px;
+        border: 1px solid color-mix(in srgb, var(--omega-border) 80%, var(--omega-accent));
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--omega-surface) 90%, var(--omega-elevated));
+        box-shadow: 0 8px 24px rgb(0 0 0 / 22%), inset 0 1px rgb(255 255 255 / 5%);
+        color: var(--omega-text);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 18px;
+        transform: none;
+        pointer-events: none;
+      }
+      .trading-session-status[data-open="false"] { color: var(--omega-muted); }
+      .trading-session-status > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .trading-session-indicator {
+        flex: 0 0 auto;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--omega-success);
+      }
+      .trading-session-status[data-open="false"] .trading-session-indicator {
+        background: var(--omega-muted);
+      }
+      .bottom-bar-tabs {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        width: 100%;
+        height: 32px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+      }
+      .bottom-bar-tabs::-webkit-scrollbar { display: none; }
+      .bottom-bar-right { flex: 0 0 auto; }
+      .bottom-bar-right > * { flex: 0 0 auto; white-space: nowrap; }
+      .bottom-bar-right .connection-latency { color: var(--omega-text); font-size: 12px; white-space: nowrap; }
+      #bottom-clock { font-size: 12px; }
+      /* Loaded-bars readout lives next to the dock tabs (status area), not in
+         the crowded right-hand cluster where it collided with the P/L badge. */
+      .bottom-bar-stat {
+        flex: 0 0 auto;
+        align-self: center;
+        margin-left: 8px;
+        padding-left: 10px;
+        border-left: 1px solid var(--omega-border);
+        color: var(--omega-muted);
+        font-size: 11px;
+        line-height: 1.4;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .bottom-tab-btn {
+        box-sizing: border-box;
+        height: 32px;
+        min-height: 32px;
+        background-color: var(--omega-elevated); border: 1px solid var(--omega-border); border-radius: 4px;
+        color: var(--omega-text);
+        padding: 4px 10px;
+        font-size: 12px; font-weight: 600;
+        cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+        box-shadow: inset 0 1px color-mix(in srgb, var(--omega-text) 10%, transparent);
+        transition: all 0.15s;
+      }
+      .bottom-tab-btn:hover { background: var(--omega-accent-hover); color: #fff; border-color: var(--omega-accent); }
+      .bottom-tab-btn.active { background: var(--omega-accent-hover); color: #fff; border-color: var(--omega-accent); }
+      .vela-cell > .vela-attribution {
+        z-index: -1 !important;
+        pointer-events: none !important;
+        text-decoration: none !important;
+      }
+      .vela-cell > .vela-attribution .vela-attr-symbol,
+      .vela-cell > .vela-attribution .vela-attr-wordmark { display: none !important; }
+      .vela-cell > .vela-attribution::after {
+        content: "OMEGA";
+        display: block;
+        color: currentColor;
+        opacity: 0.12;
+        font: 800 32px/1.1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0.16em;
+        user-select: none;
+        pointer-events: none;
+      }
+      #quant-status { color: var(--omega-muted); font-size: 10px; }
+
+      .dock-pill { display: inline-flex; align-items: center; gap: var(--space-md); font-size: 12px; color: var(--omega-text); }
+
+      /* Top Toolbar — sits above the chart inside the chart-wrapper */
+      #top-toolbar {
+        height: 36px;
+        min-height: 36px;
+        background: var(--omega-surface);
+        border-bottom: 1px solid var(--omega-border);
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        gap: 0;
+        flex-shrink: 0;
+        z-index: 25;
+      }
+      #top-toolbar .dock-pill { color: var(--omega-text); font-weight: 600; gap: var(--space-md); }
+      .platform-zoom-controls { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+      .connection-latency { color: var(--omega-muted); font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .trading-account-status { display:flex; align-items:center; gap:7px; margin-left:auto; min-width:0; max-width:360px; padding:3px 7px; border-left:3px solid var(--omega-warning); color:var(--omega-text); font-variant-numeric:tabular-nums; line-height:1.15; }
+      .trading-account-label { color:var(--omega-muted); font-size:10px; white-space:nowrap; }
+      .trading-account-status select { min-width:142px; max-width:195px; background:var(--omega-elevated); border:1px solid var(--omega-border); border-radius:4px; color:var(--omega-text); padding:3px 5px; font-size:11px; font-weight:600; cursor:pointer; }
+      .trading-account-summary { display:grid; gap:1px; min-width:0; }
+      .trading-account-status strong { color:var(--omega-warning); font-size:10px; letter-spacing:.04em; }
+      .trading-account-status .trading-account-summary > span { overflow:hidden; color:var(--omega-muted); font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
+      .vela-widget-topbar .trading-account-status { box-sizing:border-box; flex:0 0 auto; height:30px; min-height:30px; max-width:none; margin:0 0 0 4px; padding:0 5px; gap:5px; border-left:2px solid var(--omega-warning); border-radius:5px; background:var(--omega-elevated); }
+      .vela-widget-topbar .trading-account-label { font-size:11px; }
+      .vela-widget-topbar .trading-account-status select { box-sizing:border-box; height:30px; min-height:30px; min-width:142px; padding:0 5px; font-size:11px; }
+      .vela-dialog--settings .omega-settings-theme {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: auto;
+        color: var(--vela-fg-muted, var(--omega-muted));
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .vela-dialog--settings .omega-settings-theme select {
+        height: 28px;
+        max-width: 190px;
+        padding: 0 8px;
+        border: 1px solid var(--vela-border, var(--omega-border));
+        border-radius: 4px;
+        background: var(--vela-surface, var(--omega-elevated));
+        color: var(--vela-fg, var(--omega-text));
+        font: inherit;
+        font-size: 12px;
+      }
+      .vela-dialog--settings .omega-settings-theme select:focus-visible {
+        outline: 2px solid var(--vela-accent, var(--omega-accent));
+        outline-offset: 2px;
+      }
+      .vela-widget-topbar .trading-account-summary { display:none; }
+      .vela-widget-topbar #chart-tabs-toggle {
+        flex: 0 0 auto;
+        height: 30px;
+        padding: 0 10px;
+        border: 1px solid var(--omega-border);
+        border-radius: 4px;
+        background: var(--omega-elevated);
+        color: var(--omega-text);
+        font: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      .vela-widget-topbar #chart-tabs-toggle:hover {
+        border-color: var(--omega-accent);
+        color: var(--omega-accent-hover);
+      }
+      .vela-widget-topbar #chart-tabs-toggle:focus-visible {
+        outline: 2px solid var(--omega-accent);
+        outline-offset: 2px;
+      }
+      .vela-widget-topbar #chart-tabs-toggle.active {
+        border-color: var(--omega-accent);
+        background: color-mix(in srgb, var(--omega-accent) 20%, var(--omega-elevated));
+      }
+      .connection-latency[data-quality="good"] { color: var(--omega-success); }
+      .connection-latency[data-quality="warning"] { color: var(--omega-warning); }
+      .connection-latency[data-quality="poor"] { color: var(--omega-error); }
+      .platform-zoom-title { color: var(--omega-muted); font-size: 11px; }
+      .platform-zoom-button { min-width: 28px; justify-content: center; padding-inline: 7px !important; font-size: 15px !important; line-height: 1; }
+      .platform-zoom-value { width: 48px; min-width: 48px; padding: 3px 4px; color: var(--omega-text); background: var(--omega-elevated); border: 1px solid var(--omega-border); border-radius: var(--radius-md); font: 600 11px/1 Consolas, monospace; text-align: center; }
+      .platform-zoom-value:focus { border-color: var(--omega-accent); outline: none; }
+      #top-toolbar .dock-pill label,
+      #top-toolbar .dock-pill > span { color: var(--omega-text); }
+      #top-toolbar .dock-pill select {
+        background: var(--omega-elevated);
+        border: 1px solid var(--omega-border);
+        border-radius: 4px;
+        color: var(--omega-text);
+        padding: 3px 6px;
+        font-size: 11px;
+        cursor: pointer;
+      }
+      #top-toolbar .dock-pill select:hover { border-color: var(--omega-accent); }
+      #top-toolbar .bars-select {
+        min-height: 28px;
+        border-radius: var(--radius-lg) !important;
+      }
+      /* All chart actions intentionally live in one visual control zone.  The
+         individual .dock-pill elements only provide semantic grouping. */
+      #top-toolbar .toolbar-control-zone {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: var(--space-md);
+        width: max-content;
+        flex: 0 0 auto;
+        min-height: 28px;
+        padding: 4px 6px;
+        background: var(--omega-elevated);
+        border: 1px solid var(--omega-border);
+        border-radius: var(--radius-lg);
+      }
+      #top-toolbar .toolbar-control-zone .dock-pill {
+        flex: 0 0 auto;
+      }
+      /* One compact, consistent control language across the whole toolbar. */
+      #top-toolbar :is(button, select, input, .timeframe-menu summary) {
+        min-height: 28px;
+        border-radius: var(--radius-lg) !important;
+      }
+      #top-toolbar .dock-pill > span:not(#chart-group-indicator) {
+        background: transparent;
+        border: 0;
+        padding: 0;
+      }
+      #chart-group-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        flex: 0 0 auto;
+        border: 1px dashed #64748b;
+        border-radius: 50%;
+        background: transparent;
+        transition: background-color 120ms ease;
+      }
+      .timeframe-menu { position: relative; font-size: 11px; font-weight: 600; }
+      .timeframe-menu summary {
+        list-style: none; cursor: pointer; border: 1px solid var(--omega-border); border-radius: 4px;
+        background: var(--omega-elevated); color: var(--omega-text); padding: 4px 7px; white-space: nowrap;
+      }
+      .timeframe-menu summary::-webkit-details-marker { display: none; }
+      .timeframe-menu summary::after { content: ' ▾'; color: #9ca3af; }
+      .timeframe-menu[open] > summary {
+        border-color: var(--omega-accent);
+        background-color: color-mix(in srgb, var(--omega-accent) 20%, var(--omega-elevated));
+        color: var(--omega-text);
+      }
+      .timeframe-menu-content {
+        position: absolute; z-index: 100; top: calc(100% + 6px); left: 0; width: 220px;
+        display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 8px;
+        padding: 12px; border: 1px solid #2a2e39; border-radius: 6px;
+        background: var(--omega-surface); color: var(--omega-text); box-shadow: 0 8px 24px rgb(3 10 22 / 55%);
+      }
+      .timeframe-menu-content input,
+      .timeframe-menu-content select { min-width: 0; width: 100%; box-sizing: border-box; }
+      .timeframe-menu-content small { grid-column: 1 / -1; color: #9ca3af; font-weight: 400; line-height: 1.4; }
+      #apply-custom-timeframe { grid-column: 1 / -1; justify-self: end; }
+      #replay-menu .timeframe-menu-content { width: 280px; }
+
+      #omega-neural-network-lab { position:fixed; z-index:10000; inset:0; display:grid; place-items:center; padding:24px; background:rgba(4,9,15,.62); }
+      .omega-nn-card { width:min(620px,100%); border:1px solid var(--omega-border,#46566c); border-radius:8px; padding:16px; color:var(--omega-text,#eef4fb); background:var(--omega-bg,#17202c); box-shadow:0 20px 60px rgba(0,0,0,.45); font:13px/1.45 sans-serif; }
+      .omega-nn-card header,.omega-nn-card footer { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+      .omega-nn-card header strong { font-size:15px; }.omega-nn-note,.omega-nn-warning,.omega-nn-status { margin:12px 0; }.omega-nn-note { color:var(--omega-muted,#9ca3af); }.omega-nn-warning { color:#e9b45b; }.omega-nn-status { padding:8px; border-radius:4px; background:var(--omega-elevated,#2a3749); }
+      .omega-nn-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }.omega-nn-grid label { display:grid; gap:4px; color:var(--omega-muted,#9ca3af); }.omega-nn-grid input,.omega-nn-grid select { min-width:0; border:1px solid var(--omega-border,#46566c); border-radius:4px; padding:7px; color:var(--omega-text,#eef4fb); background:var(--omega-elevated,#2a3749); }
+      .ctrader-timeframe-menu { position: relative; }
+      .ctrader-timeframe-content {
+        position: absolute; z-index: 110; top: calc(100% + 6px); left: 0;
+        width: min(740px, calc(100vw - 24px)); padding: 0;
+        overflow-x: auto; border: 1px solid var(--omega-border); border-radius: var(--radius-lg);
+        background: var(--omega-surface); box-shadow: 0 10px 28px rgb(3 10 22 / 55%);
+      }
+      .ctrader-timeframe-help { display: block; padding: 6px 10px; color: var(--omega-muted); font-size: 11px; }
+      .ctrader-timeframe-help[data-state="error"] { color: #ff7777; }
+      .ctrader-timeframe-grid { display: grid; grid-template-columns: repeat(5, minmax(118px, 1fr)); min-width: 660px; }
+      .ctrader-timeframe-column { min-height: 320px; border-right: 1px solid var(--omega-border); }
+      .ctrader-timeframe-column:last-child { border-right: 0; }
+      .ctrader-timeframe-column h3 { position: sticky; top: 0; z-index: 1; margin: 0; padding: 8px; color: var(--omega-text); background: var(--omega-elevated); border-bottom: 1px solid var(--omega-border); font-size: 11px; font-weight: 700; text-align: center; }
+      .ctrader-timeframe-list { max-height: 350px; overflow-y: auto; padding: 4px; scrollbar-color: var(--omega-border) transparent; }
+      .ctrader-timeframe-list button { display: flex; align-items: center; width: 100%; min-height: 25px; padding: 3px 6px; color: var(--omega-text); background: transparent; border: 1px solid transparent; border-radius: var(--radius-sm); font: inherit; font-size: 11px; text-align: left; cursor: pointer; }
+      .ctrader-timeframe-list button:hover:not(:disabled), .ctrader-timeframe-list button.selected { background: color-mix(in srgb, var(--omega-accent) 17%, var(--omega-elevated)); border-color: var(--omega-accent); }
+      .ctrader-timeframe-list button.selected::after { content: '✓'; margin-left: auto; color: var(--omega-accent-hover); font-weight: 800; }
+      .ctrader-timeframe-list button:disabled { color: var(--omega-muted); opacity: .6; cursor: not-allowed; }
+      .ctrader-timeframe-list kbd { min-width: 25px; margin-right: 5px; color: var(--omega-muted); font: 10px/1 Consolas, monospace; }
+      #replay-controls { display: flex; grid-column: 1 / -1; gap: 6px; justify-content: flex-end; }
+      #replay-status { grid-column: 1 / -1; color: #9ca3af; font-weight: 400; line-height: 1.4; }
+      #top-toolbar .separator { display: none; }
+      .chart-toolbar-input { background: var(--omega-elevated); border: 1px solid var(--omega-border); border-radius: var(--radius-lg); color: var(--omega-text); padding: 3px 6px; font-size: 11px; }
+      #top-toolbar .btn { color: #fff; border-color: #3b4252; }
+      #top-toolbar .btn:hover { color: #fff; background: #2a2e39; }
+      #top-toolbar button {
+        box-sizing: border-box;
+        height: 28px;
+        min-height: 28px;
+        padding-block: var(--space-xs);
+        white-space: nowrap;
+      }
+      #chart-tabs-toggle {
+        position: relative;
+        overflow: hidden;
+      }
+      #chart-tabs-toggle.active {
+        color: #fff;
+        background: var(--omega-accent-hover);
+        border-color: var(--omega-accent);
+      }
+      #chart-tabs-toggle.active::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgb(255 255 255 / 28%), transparent);
+        transform: skewX(-20deg);
+        animation: omegaShine 2.5s infinite;
+        pointer-events: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #chart-tabs-toggle.active::after { animation: none; }
+      }
+      /* Every interactive control in the shared toolbar zone has the same
+         pointer feedback; component-specific rules may not leave any control
+         visually inert on hover. */
+      #top-toolbar .toolbar-control-zone :is(button, select, input, summary):not(:disabled):hover {
+        cursor: pointer;
+        border-color: var(--omega-accent);
+        background-color: color-mix(in srgb, var(--omega-accent) 12%, var(--omega-elevated));
+        color: var(--omega-text);
+      }
+      #top-toolbar .toolbar-control-zone input:not(:disabled):hover {
+        cursor: text;
+      }
+      #top-toolbar .toolbar-control-zone :is(button, select, input, summary):focus-visible {
+        outline: 2px solid var(--omega-accent);
+        outline-offset: 2px;
+      }
+      #top-toolbar {
+        flex-wrap: nowrap;
+        height: 36px;
+        min-height: 36px;
+        /* Dropdowns are positioned below this toolbar. Any overflow clipping here
+           makes their buttons visible to accessibility but impossible to click. */
+        overflow: visible;
+        padding-top: 4px;
+        padding-bottom: 4px;
+      }
+#top-toolbar .toolbar-control-zone { max-width: none; }
+      #workspace-profile-name { width: 100px; }
+      #update-info-modal {
+        position: fixed; inset: 36px 0 28px; z-index: 100000000;
+        display: flex; align-items: center; justify-content: center;
+        padding: 16px; background: rgb(0 0 0 / 42%);
+      }
+      #update-info-modal[hidden] { display: none !important; }
+      #update-info-dialog {
+        width: min(430px, calc(100vw - 32px)); max-height: min(70vh, 420px); overflow: auto;
+        color: var(--omega-text); background: var(--omega-surface); border: 1px solid var(--omega-border);
+        border-radius: 8px; box-shadow: 0 12px 32px rgb(0 0 0 / 28%);
+      }
+      #update-info-header {
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        padding: 10px 14px; border-bottom: 1px solid var(--omega-border);
+      }
+      #update-info-header strong { font-size: 13px; }
+      #update-info-close { width: 28px; height: 28px; padding: 0; font-size: 20px; line-height: 1; }
+      #update-info-message { margin: 0; padding: 14px; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+      #update-info-message[data-state="available"] { color: #d97706; }
+      #update-info-message[data-state="error"] { color: #dc2626; }
+      #update-info-message[data-state="current"] { color: #15803d; }
+      #chart-paper-trade-controls {
+        position: absolute; top: 46px; left: 50%; z-index: 30;
+        transform: translateX(-50%);
+        display: flex; align-items: center; gap: 5px; padding: 3px 8px;
+        color: var(--omega-text); background: var(--omega-surface);
+        border: 1px solid var(--omega-border); border-radius: 6px;
+        box-shadow: 0 4px 14px rgb(0 0 0 / 24%);
+        user-select: none;
+        white-space: nowrap;
+        cursor: grab;
+      }
+      body[data-theme="light"] #chart-paper-trade-controls {
+        background: var(--omega-surface);
+        border-color: var(--omega-border);
+        box-shadow: 0 4px 14px rgb(0 0 0 / 10%);
+      }
+      .omega-drag-handle {
+        cursor: grab;
+        touch-action: none;
+        user-select: none;
+        color: var(--omega-muted);
+        font-size: 14px;
+        line-height: 1;
+        padding: 2px 4px;
+        border-radius: 3px;
+        letter-spacing: -2px;
+      }
+      .omega-drag-handle:hover {
+        color: var(--omega-text);
+        background: var(--omega-elevated);
+      }
+      .omega-drag-handle:active {
+        cursor: grabbing;
+      }
+      #chart-paper-trade-controls[hidden] { display: none !important; }
+      #chart-paper-trade-controls strong { font-size: 11px; white-space: nowrap; }
+      #chart-paper-trade-controls :is(button, input, select, textarea, label) { cursor: auto; }
+      #chart-paper-trade-controls button { cursor: pointer; }
+      #chart-paper-trade-controls label { color: var(--omega-muted); font-size: 11px; }
+
+      /* ============================================================
+         Per-Chart Overlay Header & Controls
+         ============================================================ */
+      .omega-statusline-group-square {
+        width: 13px;
+        height: 13px;
+        border-radius: 3px;
+        display: inline-block;
+        cursor: pointer;
+        margin-right: 6px;
+        vertical-align: middle;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        flex-shrink: 0;
+        transition: transform 0.1s ease, border-color 0.15s ease;
+      }
+      .omega-statusline-group-square:hover {
+        transform: scale(1.2);
+        border-color: #fff;
+      }
+      .omega-statusline-symbol {
+        cursor: pointer !important;
+        border-radius: 4px;
+        padding: 1px 5px !important;
+        transition: all 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .omega-statusline-symbol:after {
+        content: " ▾";
+        font-size: 10px;
+        color: var(--omega-muted);
+      }
+      .omega-statusline-symbol:hover {
+        background: var(--omega-elevated) !important;
+        color: var(--omega-accent) !important;
+      }
+      .omega-statusline-meta {
+        cursor: pointer !important;
+        border-radius: 4px;
+        padding: 1px 4px !important;
+        transition: all 0.15s ease;
+      }
+      .omega-statusline-meta:hover {
+        background: var(--omega-elevated) !important;
+        color: var(--omega-text) !important;
+      }
+      /* Compact chart-type code shown inside every chart's own statusline:
+         Hm5 = Heikin Ashi 5m, Re50 = Renko 50 pips, Ra200 = Range 200 pips. */
+      .omega-statusline-style {
+        display: inline-flex;
+        align-items: center;
+        align-self: center;
+        margin-left: 6px;
+        padding: 1px 5px !important;
+        border-left: 1px solid var(--omega-border);
+        border-radius: 0 4px 4px 0;
+        color: var(--omega-accent);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: background 0.15s ease, color 0.15s ease;
+      }
+      .omega-statusline-style:hover {
+        background: var(--omega-elevated) !important;
+        color: var(--omega-accent-hover);
+      }
+      .omega-cell-header {
+        display: none !important;
+      }
+      .omega-cell-group-badge {
+        background: var(--omega-surface);
+        border: 1px solid var(--omega-border);
+        border-radius: 4px;
+        padding: 3px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s ease;
+      }
+      .omega-cell-group-badge:hover {
+        border-color: var(--omega-accent);
+        background: var(--omega-elevated);
+      }
+      .omega-group-square {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        display: inline-block;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        box-sizing: border-box;
+      }
+      .omega-cell-symbol-btn,
+      .omega-cell-tf-btn {
+        background: var(--omega-surface);
+        color: var(--omega-text);
+        border: 1px solid var(--omega-border);
+        border-radius: 4px;
+        padding: 3px 7px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.15s ease;
+      }
+      .omega-cell-symbol-btn:hover,
+      .omega-cell-tf-btn:hover {
+        background: var(--omega-elevated);
+        border-color: var(--omega-accent);
+      }
+      .omega-btn-caret {
+        color: var(--omega-muted);
+        font-size: 9px;
+      }
+      .omega-cell-popup {
+        z-index: var(--z-modal);
+        background: var(--omega-surface);
+        border: 1px solid var(--omega-border);
+        border-radius: 6px;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        color: var(--omega-text);
+        overflow: hidden;
+        animation: omegaFadeIn 0.12s ease;
+      }
+      @keyframes omegaFadeIn {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .omega-popup-title {
+        padding: 7px 10px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--omega-muted);
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--omega-border);
+      }
+      .omega-group-menu {
+        width: 150px;
+        padding: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .omega-group-item {
+        background: transparent;
+        border: 0;
+        border-radius: 4px;
+        padding: 5px 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--omega-text);
+        font-size: 12px;
+        cursor: pointer;
+        width: 100%;
+        text-align: left;
+      }
+      .omega-group-item:hover {
+        background: var(--omega-elevated);
+      }
+      .omega-group-item.selected {
+        background: color-mix(in srgb, var(--omega-accent) 20%, transparent);
+        font-weight: 600;
+      }
+      .omega-group-item-swatch {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+      .omega-symbol-picker {
+        width: 310px;
+        max-height: 320px;
+        display: flex;
+        flex-direction: column;
+      }
+      .omega-symbol-search-input {
+        background: var(--omega-bg);
+        color: var(--omega-text);
+        border: 0;
+        border-bottom: 1px solid var(--omega-border);
+        padding: 8px 10px;
+        font-size: 12px;
+        outline: none;
+        width: 100%;
+      }
+      .omega-symbol-search-input:focus {
+        border-bottom-color: var(--omega-accent);
+      }
+      .omega-symbol-source-select {
+        width: 100%;
+        border: 0;
+        border-bottom: 1px solid var(--omega-border);
+        padding: 8px 10px;
+        color: var(--omega-text);
+        background: var(--omega-elevated);
+        font: inherit;
+        outline: none;
+      }
+      .omega-symbol-source-select:focus { border-bottom-color: var(--omega-accent); }
+      .omega-symbol-list {
+        max-height: 260px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 4px;
+        gap: 2px;
+      }
+      .omega-symbol-item {
+        background: transparent;
+        border: 0;
+        border-radius: 4px;
+        padding: 6px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--omega-text);
+        cursor: pointer;
+        text-align: left;
+      }
+      .omega-symbol-item:hover {
+        background: var(--omega-elevated);
+      }
+      .omega-symbol-item.selected {
+        background: color-mix(in srgb, var(--omega-accent) 20%, transparent);
+      }
+      .omega-symbol-main {
+        display: flex;
+        flex-direction: column;
+      }
+      .omega-symbol-main strong { font-size: 12px; }
+      .omega-symbol-main small { font-size: 10px; color: var(--omega-muted); }
+      .omega-symbol-cat {
+        font-size: 10px;
+        color: var(--omega-muted);
+        background: var(--omega-bg);
+        padding: 2px 5px;
+        border-radius: 3px;
+      }
+      .omega-symbol-item.custom-match {
+        background: color-mix(in srgb, var(--omega-accent) 15%, transparent);
+        border-bottom: 1px solid var(--omega-border);
+      }
+      .omega-symbol-empty { padding: 12px 10px; color: var(--omega-muted); font-size: 11px; }
+      .omega-tf-menu {
+        width: 270px;
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 4px;
+        padding: 6px;
+      }
+      /* Full period/type selector opened from a chart's statusline. It reuses
+         the toolbar grid (standard periods, ticks, Renko, Range, Heikin Ashi). */
+      .omega-tf-menu.omega-tf-full {
+        width: auto;
+        max-width: min(860px, calc(100vw - 24px));
+        display: block;
+        padding: 0;
+        max-height: min(560px, calc(100vh - 120px));
+        overflow: auto;
+      }
+      .omega-tf-menu.omega-tf-full .ctrader-timeframe-grid {
+        min-width: 660px;
+      }
+      .omega-tf-menu.omega-tf-full .ctrader-timeframe-list {
+        max-height: 420px;
+        overflow-y: auto;
+      }
+      .omega-tf-menu.omega-tf-full .omega-tf-custom {
+        padding: 6px 8px;
+        border-top: 1px solid var(--omega-border);
+      }
+      .omega-tf-heading {
+        grid-column: 1 / -1;
+        padding: 4px 2px 1px;
+        color: var(--omega-muted);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+      }
+      .omega-tf-item {
+        background: var(--omega-elevated);
+        border: 1px solid var(--omega-border);
+        border-radius: 4px;
+        padding: 5px;
+        font-size: 12px;
+        color: var(--omega-text);
+        cursor: pointer;
+        text-align: center;
+      }
+      .omega-tf-item:hover { border-color: var(--omega-accent); }
+      .omega-tf-item.selected {
+        background: var(--omega-accent);
+        color: #fff;
+        border-color: var(--omega-accent);
+      }
+      .omega-tf-custom {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 4px;
+        padding-top: 4px;
+        border-top: 1px solid var(--omega-border);
+      }
+      .omega-tf-custom input,
+      .omega-tf-custom button {
+        min-width: 0;
+        min-height: 27px;
+        color: var(--omega-text);
+        background: var(--omega-bg);
+        border: 1px solid var(--omega-border);
+        border-radius: 4px;
+        font: inherit;
+      }
+      .omega-tf-custom input { padding: 4px 7px; }
+      .omega-tf-custom button { padding: 4px 8px; cursor: pointer; }
+      .omega-tf-custom button:hover { border-color: var(--omega-accent); background: var(--omega-elevated); }
+      #paper-trade-lots {
+        width: 52px; min-width: 46px; max-width: 60px; padding: 2px 4px;
+        text-align: center;
+        color: var(--omega-text); background: var(--omega-bg);
+        border: 1px solid var(--omega-border); border-radius: 4px;
+        font: 11px Consolas, monospace;
+      }
+      #chart-paper-trade-controls button {
+        box-sizing: border-box;
+        min-width: 40px; height: 22px; padding: 3px 7px; border: 0; border-radius: 4px;
+        color: #fff; font-size: 11px; font-weight: 700; line-height: 1; cursor: pointer;
+      }
+      #chart-paper-trade-controls .paper-trade-buy { background: var(--omega-success); }
+      #chart-paper-trade-controls .paper-trade-sell { background: var(--omega-error); }
+      #paper-trade-settings-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--omega-accent);
+        color: #fff;
+        border: 0;
+      }
+      #paper-trade-settings-btn:hover {
+        background: var(--omega-accent-hover);
+        border-color: var(--omega-accent-hover);
+      }
+      body[data-theme="light"] #paper-trade-settings-btn {
+        background: var(--omega-accent);
+        color: #fff;
+        border: 0;
+      }
+      body[data-theme="light"] #paper-trade-settings-btn:hover {
+        background: var(--omega-accent-hover);
+        border-color: var(--omega-accent-hover);
+      }
+      #chart-paper-trade-controls button:disabled { cursor: wait; opacity: .55; }
+      #paper-trade-status {
+        grid-column: 1 / -1; min-height: 0; color: var(--omega-muted);
+        font-size: 10px; line-height: 1.35;
+      }
+      #paper-trade-status:empty { display: none; }
+      #paper-trade-status[data-state="error"] { color: var(--omega-error); }
+      #paper-trade-status[data-state="success"] { color: var(--omega-success); }
+      #paper-trade-lots[aria-invalid="true"] { border-color: var(--omega-error); }
+      [data-omega-spread-readout] .vela-dw-label {
+        text-transform: none !important; letter-spacing: normal !important;
+      }
+      .omega-favorite-tools-menu {
+        position: fixed; z-index: 100000002; display: flex; flex-direction: column;
+        gap: 3px; width: min(250px, calc(100vw - 16px)); max-height: min(65vh, 420px);
+        overflow: auto; padding: 8px;
+        color: var(--omega-text); background: var(--omega-surface);
+        border: 1px solid var(--omega-border); border-radius: 7px;
+        box-shadow: 0 10px 28px rgb(0 0 0 / 28%);
+      }
+      .omega-favorite-tools-heading { padding: 4px 7px 7px; font-size: 12px; }
+      .omega-favorite-tools-search {
+        flex: 0 0 auto; width: 100%; padding: 7px 8px; color: var(--omega-text);
+        background: var(--omega-bg); border: 1px solid var(--omega-border); border-radius: 4px;
+        font: inherit; font-size: 12px;
+      }
+      .omega-favorite-tools-list { min-height: 0; overflow-y: auto; }
+      .omega-favorite-tool-row { display: flex; align-items: center; gap: 4px; }
+      .omega-favorite-tool-item {
+        flex: 1; min-width: 0; padding: 7px; border: 0; border-radius: 4px; text-align: left;
+        color: var(--omega-text); background: transparent; cursor: pointer; font-size: 12px;
+      }
+      .omega-favorite-tool-item:hover,
+      .omega-favorite-tool-item:focus-visible { outline: none; background: var(--omega-elevated); }
+      .omega-favorite-tool-star {
+        flex: 0 0 30px; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 4px;
+        color: var(--omega-muted); background: transparent; cursor: pointer; font-size: 20px; line-height: 1;
+      }
+      .omega-favorite-tool-star[aria-pressed="true"] { color: #d99b00; }
+      .omega-favorite-tool-star:hover,
+      .omega-favorite-tool-star:focus-visible { outline: none; background: var(--omega-elevated); }
+      .omega-favorite-tools-empty { margin: 0; padding: 7px; color: var(--omega-muted); font-size: 11px; line-height: 1.45; }
+      #paper-trade-close-modal,
+      #paper-trade-settings-modal,
+      #paper-trade-history-modal,
+      #paper-open-trades-modal,
+      #paper-pending-order-modal {
+        position: fixed; inset: 36px 0 28px; z-index: 100000001;
+        display: flex; align-items: center; justify-content: center;
+        padding: 16px; background: color-mix(in srgb, var(--omega-bg) 85%, rgba(0, 0, 0, 0.48));
+      }
+      body[data-theme="light"] #paper-trade-close-modal,
+      body[data-theme="light"] #paper-trade-settings-modal,
+      body[data-theme="light"] #paper-trade-history-modal,
+      body[data-theme="light"] #paper-open-trades-modal,
+      body[data-theme="light"] #paper-pending-order-modal {
+        background: color-mix(in srgb, var(--omega-bg) 85%, rgba(0, 0, 0, 0.32));
+      }
+      #paper-trade-close-modal[hidden],
+      #paper-trade-settings-modal[hidden],
+      #paper-trade-history-modal[hidden],
+      #paper-open-trades-modal[hidden],
+      #paper-pending-order-modal[hidden] { display: none !important; }
+      #paper-trade-close-dialog,
+      #paper-trade-settings-dialog,
+      #paper-trade-history-dialog,
+      #paper-open-trades-dialog,
+      #paper-pending-order-dialog {
+        width: min(380px, calc(100vw - 32px)); padding: 16px;
+        color: var(--omega-text); background: var(--omega-surface);
+        border: 1px solid var(--omega-border); border-radius: 8px;
+        box-shadow: 0 12px 32px rgb(0 0 0 / 30%);
+      }
+      #paper-trade-history-dialog {
+        width: min(760px, calc(100vw - 32px)); max-height: 85vh;
+        display: flex; flex-direction: column;
+      }
+      #paper-trade-settings-dialog {
+        width: min(560px, calc(100vw - 32px)); max-height: 85vh;
+        overflow-y: auto;
+      }
+      .paper-trade-setting-row {
+        display: grid; grid-template-columns: minmax(0, 1fr) minmax(110px, 160px);
+        align-items: center; gap: 12px;
+      }
+      .paper-trade-setting-row input[type="number"] {
+        width: 100%; padding: 5px 7px; color: var(--omega-text);
+        background: var(--omega-bg); border: 1px solid var(--omega-border); border-radius: 4px;
+      }
+      .paper-trade-setting-row input[type="range"] { width: 100%; }
+      .paper-trade-quick-lots-settings > div {
+        display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 5px;
+      }
+      .paper-trade-quick-lots-settings input {
+        width: 100%; min-width: 0; padding: 5px 7px; color: var(--omega-text);
+        background: var(--omega-bg); border: 1px solid var(--omega-border); border-radius: 4px;
+      }
+      .paper-trade-setting-check { display: flex; align-items: center; gap: 8px; }
+      .paper-trade-settings-note { color: var(--omega-muted); font-size: 10px; line-height: 1.4; }
+      #paper-open-trades-dialog {
+        width: min(760px, calc(100vw - 32px)); max-height: 85vh;
+        display: flex; flex-direction: column;
+      }
+      .omega-open-trade-row {
+        display: grid; grid-template-columns: minmax(90px, 1.2fr) repeat(4, minmax(70px, 1fr)) 34px;
+        align-items: center; gap: 8px; padding: 9px 6px; border-bottom: 1px solid var(--omega-border);
+        font-size: 11px;
+      }
+      .omega-open-trade-head { color: var(--omega-muted); font-weight: 600; }
+      .omega-open-trade-side-buy, .omega-open-trade-positive { color: var(--omega-success); }
+      .omega-open-trade-side-sell, .omega-open-trade-negative { color: var(--omega-error); }
+      .omega-open-trade-close {
+        width: 28px; height: 28px; border: 1px solid var(--omega-border); border-radius: 5px;
+        color: var(--omega-error); background: transparent; cursor: pointer; font-size: 17px; line-height: 1;
+      }
+      .omega-open-trade-close:hover { background: color-mix(in srgb, var(--omega-error) 12%, transparent); }
+      .omega-open-trades-empty { margin: 0; padding: 28px 12px; color: var(--omega-muted); text-align: center; font-size: 12px; }
+      .omega-history-table {
+        width: 100%; border-collapse: collapse; font-size: 11px; text-align: left;
+      }
+      .omega-history-table th, .omega-history-table td {
+        padding: 7px 8px; border-bottom: 1px solid var(--omega-border);
+      }
+      .omega-history-table th {
+        position: sticky; top: 0; background: var(--omega-elevated); color: var(--omega-muted); font-weight: 600;
+      }
+      body[data-theme="light"] .omega-history-table th {
+        background: var(--omega-surface);
+      }
+      .omega-history-positive { color: var(--omega-success); font-weight: 600; }
+      .omega-history-negative { color: var(--omega-error); font-weight: 600; }
+      #paper-trade-close-title { font-size: 14px; }
+      #paper-trade-close-message { margin: 10px 0 16px; color: var(--omega-muted); font-size: 12px; }
+      .paper-trade-close-actions { display: flex; justify-content: flex-end; gap: 8px; }
+      .paper-pending-order-field { display: grid; grid-template-columns: 1fr 150px; align-items: center; gap: 12px; font-size: 12px; }
+      .paper-pending-order-notice { color: var(--omega-muted); font-size: 11px; line-height: 1.45; }
+      #paper-pending-order-message { color: var(--omega-muted); font-size: 11px; }
+      #paper-pending-order-message[data-state="error"] { color: var(--omega-error); }
+      body[data-theme="light"] #paper-trade-close-dialog,
+      body[data-theme="light"] #paper-trade-settings-dialog,
+      body[data-theme="light"] #paper-trade-history-dialog,
+      body[data-theme="light"] #paper-open-trades-dialog,
+      body[data-theme="light"] #paper-pending-order-dialog {
+        box-shadow: 0 8px 24px rgb(15 23 42 / 16%);
+      }
+      @media (max-width: 640px) {
+        #chart-paper-trade-controls {
+          top: 76px; width: min(390px, calc(100% - 24px));
+          flex-wrap: wrap; gap: 5px; padding: 6px 8px;
+        }
+      }
+
+      /* Modal for Creating New Script */
+      #new-script-modal {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.7); z-index: var(--z-modal-backdrop);
+        align-items: center; justify-content: center;
+      }
+      .modal-overlay {
+        position: fixed; inset: 0; z-index: calc(var(--z-modal-backdrop) - 1);
+        align-items: center; justify-content: center; background: rgba(0,0,0,0.7);
+      }
+      .modal-box {
+        padding: var(--space-lg); background: var(--omega-elevated); border: 1px solid var(--omega-border);
+        border-radius: var(--radius-lg); box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      }
+      .modal-actions { display: flex; justify-content: flex-end; gap: var(--space-sm); }
+      .modal-card {
+        background: var(--omega-elevated); border: 1px solid var(--omega-border); border-radius: var(--radius-lg);
+        padding: var(--space-lg); width: 360px; box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      }
+      .modal-title { margin: 0 0 var(--space-md) 0; font-size: var(--font-size-lg); font-weight: 600; color: var(--omega-text); }
+      .modal-input {
+        width: 100%; padding: var(--space-sm) var(--space-md); background: var(--omega-bg);
+        border: 1px solid var(--omega-border); border-radius: var(--radius-md); color: var(--omega-text);
+        font-size: var(--font-size-base); outline: none; margin-bottom: var(--space-md);
+      }
+      .modal-input:focus-visible {
+        outline: 2px solid var(--omega-accent);
+        outline-offset: 2px;
+      }
+
+      /* In-app prompt/confirm dialogs (Electron does not implement window.prompt) */
+      .pine-dialog-backdrop {
+        position: fixed; inset: 0; z-index: var(--z-modal-backdrop);
+        display: flex; align-items: center; justify-content: center;
+        padding: var(--space-lg); background: rgb(0 0 0 / 60%);
+      }
+      .pine-dialog {
+        display: flex; flex-direction: column; gap: var(--space-md);
+        width: min(420px, 100%); max-height: calc(100vh - 2 * var(--space-lg)); overflow: auto;
+        padding: var(--space-lg); color: var(--omega-text); background: var(--omega-surface);
+        border: 1px solid var(--omega-border); border-radius: var(--radius-lg);
+        box-shadow: 0 18px 48px rgb(0 0 0 / 55%);
+      }
+      .pine-dialog-title { margin: 0; font-size: var(--font-size-lg); font-weight: 600; color: var(--omega-text); }
+      .pine-dialog-message {
+        margin: 0; color: var(--omega-muted); font-size: var(--font-size-sm);
+        line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere;
+      }
+      .pine-dialog-field {
+        display: flex; flex-direction: column; gap: var(--space-xs);
+        color: var(--omega-muted); font-size: var(--font-size-sm);
+      }
+      .pine-dialog-input {
+        width: 100%; padding: var(--space-sm) var(--space-md); font: inherit;
+        color: var(--omega-text); background: var(--omega-bg);
+        border: 1px solid var(--omega-border); border-radius: var(--radius-md); outline: none;
+      }
+      .pine-dialog-input:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: 2px; }
+      .pine-dialog-error { margin: 0; color: var(--omega-error); font-size: var(--font-size-sm); }
+      .pine-dialog-actions { display: flex; justify-content: flex-end; gap: var(--space-sm); }
+      .pine-dialog-button {
+        padding: var(--space-xs) var(--space-md); font: inherit; color: var(--omega-text);
+        background: var(--omega-elevated); border: 1px solid var(--omega-border);
+        border-radius: var(--radius-md); cursor: pointer;
+      }
+      .pine-dialog-button:hover { border-color: var(--omega-accent); color: var(--omega-accent-hover); }
+      .pine-dialog-button:focus-visible { outline: 2px solid var(--omega-accent); outline-offset: 2px; }
+      .pine-dialog-button.primary {
+        color: #fff; background: var(--omega-accent); border-color: var(--omega-accent);
+      }
+      .pine-dialog-button.primary:hover {
+        color: #fff; background: var(--omega-accent-hover); border-color: var(--omega-accent-hover);
+      }
+      .pine-dialog-button.destructive {
+        color: #fff; background: var(--omega-error); border-color: var(--omega-error);
+      }
+      #top-toolbar,
+      #bottom-bar {
+        background-color: var(--omega-surface);
+        border-color: var(--omega-border);
+        color: var(--omega-text);
+      }
+      #top-toolbar .dock-pill,
+      #top-toolbar .dock-pill label,
+      #top-toolbar .btn,
+      #top-toolbar .chart-toolbar-input,
+      #top-toolbar .timeframe-menu summary,
+      #top-toolbar .timeframe-menu-content,
+      #top-toolbar .chart-toolbar-input option {
+        color: var(--omega-text);
+        background-color: var(--omega-elevated);
+        border-color: var(--omega-border);
+      }
+      #top-toolbar .btn:hover,
+      #top-toolbar .chart-toolbar-input:hover,
+      #top-toolbar .timeframe-menu summary:hover { border-color: var(--omega-accent); }
+      #top-toolbar .timeframe-menu[open] > summary {
+        border-color: var(--omega-accent);
+        background-color: color-mix(in srgb, var(--omega-accent) 20%, var(--omega-elevated));
+        color: var(--omega-text);
+      }
+      .timeframe-menu-content {
+        background: var(--omega-surface);
+        color: var(--omega-text);
+        border-color: var(--omega-border);
+      }
+      .timeframe-menu-content input,
+      .timeframe-menu-content select,
+      #workspace-profile-name {
+        color: var(--omega-text);
+        background-color: var(--omega-elevated);
+        border-color: var(--omega-border);
+      }
+      .timeframe-menu-content small,
+      #replay-status { color: var(--omega-muted); }
+      .modal-box,
+      .modal-card {
+        color: var(--omega-text);
+        background: var(--omega-surface);
+        border-color: var(--omega-border);
+      }
+      .modal-title { color: var(--omega-text); }
+      .modal-input {
+        color: var(--omega-text);
+        background: var(--omega-bg);
+        border-color: var(--omega-border);
+      }
+      body[data-theme="light"] #mt5-feed-dialog,
+      body[data-theme="light"] #alpaca-feed-dialog,
+      body[data-theme="light"] #broker-dialog {
+        color: var(--omega-text);
+        background: var(--omega-surface);
+        border-color: var(--omega-border);
+      }
+      body[data-theme="light"] #mt5-feed-dialog input,
+      body[data-theme="light"] #mt5-feed-dialog select,
+      body[data-theme="light"] #alpaca-feed-dialog input,
+      body[data-theme="light"] #alpaca-feed-dialog select,
+      body[data-theme="light"] #broker-dialog input,
+      body[data-theme="light"] #broker-dialog select,
+
+/* Accessibility & Keyboard Navigation */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+[role="button"], [role="dialog"] [tabindex="0"], button, [href] {
+  cursor: pointer;
+}
+
+/* Ensure all interactive elements are keyboard-focusable */
+button:not([tabindex]),
+[role="button"]:not([tabindex]),
+[role="dialog"] [tabindex="0"] {
+  tabindex: 0;
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus management for modals */
+[aria-modal="true"][hidden] {
+  display: none !important;
+}
+
+[aria-modal="true"]:not([hidden]) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100000;
+}
+
+/* Ensure modal focus trap */
+[aria-modal="true"] *:focus {
+  outline: 2px solid var(--color-accent);
+}
+
+      body[data-theme="light"] #top-toolbar button {
+        color: var(--omega-text);
+      }
+      body[data-theme="light"] :is(dialog, [role="dialog"], .modal-box, .modal-card, .pine-ai-settings-panel) {
+        color: var(--omega-text);
+        background-color: var(--omega-surface);
+        border-color: var(--omega-border);
+      }
+      body[data-theme="light"] :is(dialog, [role="dialog"], .modal-box, .modal-card, .pine-ai-settings-panel)
+        :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) {
+        color: var(--omega-text);
+        background-color: var(--omega-bg);
+        border-color: var(--omega-border);
+        color-scheme: light;
+      }
+      body[data-theme="light"] :is([role="menu"], [role="listbox"], .timeframe-menu-content) {
+        color: var(--omega-text);
+        background-color: var(--omega-surface);
+        border-color: var(--omega-border);
+      }
+
+/* Panel Resize Handles */
+.omega-resize-handle {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(0,0,0,0.3);
+  border-radius: 2px;
+  cursor: se-resize;
+  z-index: 1000;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Draggable Panels */
+[data-panel-id] {
+  position: fixed;
+  z-index: 100;
+  box-shadow: 0 6px 24px #0008;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+[data-panel-id]:hover {
+  box-shadow: 0 10px 32px #000c;
+}
+
+/* Ensure panels don’t interfere with chart interaction */
+[data-panel-id] * {
+  pointer-events: auto;
+}
+
+/* Fix for modal backdrop overlay */
+[data-panel-id][aria-hidden="true"] {
+  display: none !important;
+}
+
+/* ============================================================
+   Top-Right Corner P&L Readout
+   ============================================================ */
+#omega-top-right-pl {
+  position: static;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace, sans-serif;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--omega-elevated, #1e222d);
+  border: 1px solid var(--omega-border, #2a2e39);
+  color: var(--omega-muted);
+  user-select: none;
+  pointer-events: auto;
+  cursor: default;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.2;
+}
+
+/* Dark-theme readability: toolbar labels, placeholder text and chart icons must
+   remain readable on the graphite chart surface, even when not selected. */
+body:not([data-theme="light"]) #top-toolbar input::placeholder {
+  color: #b9c3d3;
+  opacity: 1;
+}
+
+body:not([data-theme="light"]) .vela-workspace .vela-widget-tool,
+body:not([data-theme="light"]) .vela-workspace .vela-widget-tool .vela-icon,
+body:not([data-theme="light"]) .vela-workspace .vela-dtb-cell,
+body:not([data-theme="light"]) .vela-workspace .vela-dtb-icon,
+body:not([data-theme="light"]) .vela-workspace .vela-bb-range,
+body:not([data-theme="light"]) .vela-workspace .vela-bb-settings,
+body:not([data-theme="light"]) .vela-workspace .vela-sl-meta,
+body:not([data-theme="light"]) .vela-workspace .vela-sl-ohlc,
+body:not([data-theme="light"]) .vela-workspace .vela-widget-bottombar {
+  color: #b9c3d3;
+}
+
+body:not([data-theme="light"]) .vela-workspace .vela-widget-tool:hover,
+body:not([data-theme="light"]) .vela-workspace .vela-dtb-btn:hover,
+body:not([data-theme="light"]) .vela-workspace .vela-dtb-icon:hover,
+body:not([data-theme="light"]) .vela-workspace .vela-bb-range:hover,
+body:not([data-theme="light"]) .vela-workspace .vela-bb-settings:hover {
+  color: #f8fafc;
+  background-color: #283245;
+}
+
+body:not([data-theme="light"]) .vela-menu-item .vela-icon {
+  color: #d7e5f7;
+}
+
+/* Timeframe selection belongs in the top toolbar; hide Vela's duplicate
+   quick-range shortcuts from the bottom status bar. */
+.vela-workspace .vela-widget-bottombar .vela-bb-range {
+  display: none;
+}
+
+.vela-workspace .vela-widget-panels .vela-widget-tool,
+button[class*="vela-widget-panel-"],
+.omega-trade-launcher {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: auto;
+  min-width: 0;
+  height: 30px;
+  padding: 0 9px !important;
+  border: 1px solid var(--omega-border) !important;
+  border-radius: var(--radius-md);
+  background: var(--omega-elevated) !important;
+  color: var(--omega-text) !important;
+  white-space: nowrap;
+}
+
+.omega-panel-button-label {
+  display: inline-block;
+  max-width: 148px;
+  overflow: hidden;
+  color: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+
+.vela-workspace .vela-widget-panels .vela-widget-tool .vela-icon,
+button[class*="vela-widget-panel-"] .vela-icon {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.vela-workspace .vela-widget-panels .vela-widget-tool:hover,
+button[class*="vela-widget-panel-"]:hover,
+.omega-trade-launcher:hover {
+  border-color: var(--omega-accent) !important;
+  background: color-mix(in srgb, var(--omega-accent) 12%, var(--omega-elevated)) !important;
+}
+
+.vela-workspace .vela-widget-panels .vela-widget-tool[data-active="1"],
+button[class*="vela-widget-panel-"][data-active="1"],
+.omega-trade-launcher.active {
+  border-color: var(--omega-accent) !important;
+  background: color-mix(in srgb, var(--omega-accent) 20%, var(--omega-elevated)) !important;
+}
+
+.vela-workspace .vela-widget-panels .vela-widget-tool:focus-visible,
+button[class*="vela-widget-panel-"]:focus-visible,
+.omega-trade-launcher:focus-visible {
+  outline: 2px solid var(--omega-accent);
+  outline-offset: 2px;
+}
+
+.omega-trade-launcher {
+  color: var(--omega-text) !important;
+  box-shadow: none;
+}
+.omega-trade-launcher:hover,
+.omega-trade-launcher:focus,
+.omega-trade-launcher:focus-visible {
+  color: var(--omega-text, #f1f5f9) !important;
+  box-shadow: none !important;
+}
+.omega-trade-launcher.active {
+  color: var(--omega-text, #f1f5f9) !important;
+}
+.omega-trade-launcher svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; }
+body[data-theme="light"] #omega-top-right-pl {
+  background: var(--omega-surface, #f8fafc);
+  border-color: var(--omega-border, #cbd5e1);
+}
+#omega-top-right-pl[data-state="positive"] {
+  color: #10b981;
+}
+#omega-top-right-pl[data-state="negative"] {
+  color: #f23645;
+}
+#omega-top-right-pl[data-state="zero"] {
+  color: var(--omega-muted);
+}
+
+/* ============================================================
+   Measurement Tool Redesign (cTrader Style)
+   ============================================================ */
+.omega-measure-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  /* Above the chart canvases, below Vela's UI/menu layers (30/50) and the
+     active-chart border (25) so a right-click menu is never crossed by the
+     measurement crosshair. */
+  z-index: 22;
+}
+
+.omega-measure-cross-h {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid #ef4444;
+  pointer-events: none;
+  display: none;
+  z-index: 22;
+}
+
+.omega-measure-cross-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  border-left: 1px solid #ef4444;
+  pointer-events: none;
+  display: none;
+  z-index: 22;
+}
+
+.omega-measure-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 22;
+  overflow: hidden;
+}
+
+.omega-measure-line {
+  stroke: #ef4444;
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 2px rgba(239, 68, 68, .65));
+}
+
+.omega-ctrader-measure-card {
+  position: absolute;
+  z-index: 22;
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 14px;
+  width: 200px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 12px;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1.4;
+  display: none;
+}
+body[data-theme="dark"] .omega-ctrader-measure-card,
+body:not([data-theme="light"]) .omega-ctrader-measure-card {
+  background: var(--omega-surface, #131722);
+  color: var(--omega-text, #d1d4dc);
+  border-color: var(--omega-border, #2a2e39);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.omega-measure-header {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+body[data-theme="dark"] .omega-measure-header,
+body:not([data-theme="light"]) .omega-measure-header {
+  color: var(--omega-muted, #8b93a5);
+}
+
+.omega-measure-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 5px 0;
+}
+body[data-theme="dark"] .omega-measure-divider,
+body:not([data-theme="light"]) .omega-measure-divider {
+  background: var(--omega-border, #2a2e39);
+}
+
+.omega-measure-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.omega-measure-label {
+  color: #334155;
+  font-weight: 500;
+}
+body[data-theme="dark"] .omega-measure-label,
+body:not([data-theme="light"]) .omega-measure-label {
+  color: #94a3b8;
+}
+
+.omega-measure-value {
+  font-weight: 700;
+  color: #0f172a;
+}
+body[data-theme="dark"] .omega-measure-value,
+body:not([data-theme="light"]) .omega-measure-value {
+  color: #f1f5f9;
+}
+.omega-measure-value.positive {
+  color: #16a34a !important;
+}
+.omega-measure-value.negative {
+  color: #dc2626 !important;
+}
+
+.omega-measure-sublabel {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+}
+body[data-theme="dark"] .omega-measure-sublabel,
+body:not([data-theme="light"]) .omega-measure-sublabel {
+  color: var(--omega-muted, #8b93a5);
+}
+
+/* ============================================================
+   cTrader Trading Pane (Slide-Out Side Panel)
+   ============================================================ */
+#omega-trading-pane {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  bottom: 0;
+  width: 320px;
+  max-width: 90vw;
+  background: var(--omega-surface);
+  border: 1px solid var(--omega-border);
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.35);
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  transform: translateX(100%);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+#omega-trading-pane.open {
+  transform: translateX(0);
+}
+
+.omega-measure-active,
+.omega-measure-active canvas {
+  cursor: crosshair !important;
+}
+.omega-measure-active { position: relative !important; }
+
+/* Protection levels deliberately override the renderer's normal crosshair. */
+.omega-trade-level-hover,
+.omega-trade-level-hover canvas { cursor: ns-resize !important; }
+.omega-trade-level-dragging,
+.omega-trade-level-dragging canvas { cursor: grabbing !important; }
+
+/* Large top panel: an alternate desktop layout.  It retains the same DOM and
+   handlers as Classic mode, so switching modes cannot break chart actions. */
+:root[data-top-panel-mode="large"] #top-toolbar {
+  min-height: 64px;
+  height: 64px;
+  padding: 6px 14px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--omega-surface) 92%, #203a62), var(--omega-surface));
+  border-bottom: 1px solid color-mix(in srgb, var(--omega-accent) 34%, var(--omega-border));
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .16);
+}
+:root[data-top-panel-mode="large"] #top-toolbar .toolbar-control-zone {
+  min-height: 50px;
+  gap: 10px;
+  padding: 5px 8px;
+  border-radius: 12px;
+  border-color: color-mix(in srgb, var(--omega-accent) 26%, var(--omega-border));
+  background: color-mix(in srgb, var(--omega-elevated) 92%, #1a355d);
+}
+:root[data-top-panel-mode="large"] #top-toolbar .dock-pill { gap: 8px; font-size: 13px; }
+:root[data-top-panel-mode="large"] #top-toolbar :is(button, select, input, .timeframe-menu summary) {
+  min-height: 40px;
+  height: 40px;
+  padding: 7px 11px;
+  border-radius: 8px !important;
+  font-size: 13px;
+}
+:root[data-top-panel-mode="large"] #top-toolbar .btn { font-weight: 700; letter-spacing: .01em; }
+:root[data-top-panel-mode="large"] #top-toolbar .timeframe-menu { font-size: 13px; }
+:root[data-top-panel-mode="large"] #top-toolbar .timeframe-menu summary { padding: 10px 12px; }
+:root[data-top-panel-mode="large"] #top-toolbar .chart-toolbar-input { padding: 7px 10px; font-size: 13px; }
+:root[data-top-panel-mode="large"] #top-toolbar .dock-pill select { padding: 7px 10px; font-size: 13px; }
+:root[data-top-panel-mode="large"] #top-toolbar .platform-zoom-title,
+:root[data-top-panel-mode="large"] #top-toolbar .trading-account-label { font-size: 12px; }
+:root[data-top-panel-mode="large"] #top-toolbar .platform-zoom-value { width: 58px; min-width: 58px; font-size: 13px; }
+:root[data-top-panel-mode="large"] #top-toolbar .platform-zoom-button { min-width: 36px; font-size: 19px !important; }
+:root[data-top-panel-mode="large"] #top-toolbar .trading-account-status {
+  min-height: 46px;
+  margin-left: 12px;
+  padding: 5px 10px;
+  border-radius: 9px;
+  border: 1px solid color-mix(in srgb, var(--omega-warning) 55%, var(--omega-border));
+  border-left: 4px solid var(--omega-warning);
+  background: color-mix(in srgb, var(--omega-elevated) 90%, #2e240d);
+}
+:root[data-top-panel-mode="large"] #top-toolbar .trading-account-status select { min-width: 175px; padding: 7px 9px; font-size: 13px; }
+:root[data-top-panel-mode="large"] #top-toolbar .trading-account-status strong,
+:root[data-top-panel-mode="large"] #top-toolbar .trading-account-status .trading-account-summary > span { font-size: 11px; }
+@media (max-width: 1180px) {
+  :root[data-top-panel-mode="large"] #top-toolbar { overflow-x: auto; overflow-y: visible; }
+  :root[data-top-panel-mode="large"] #top-toolbar .trading-account-status { display: none; }
+}
+
+#activity-console {
+  position: fixed;
+  left: 12px;
+  bottom: 42px;
+  width: min(560px, calc(100vw - 24px));
+  height: 210px;
+  z-index: 100001;
+  display: flex;
+  flex-direction: column;
+  color: var(--omega-text);
+  background: var(--omega-surface);
+  border: 1px solid var(--omega-border);
+  border-radius: 7px 7px 0 0;
+  box-shadow: 0 -8px 26px rgba(0, 0, 0, .28);
+}
+#activity-console[hidden] { display: none; }
+#activity-console header {
+  min-height: 34px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--omega-border);
+  background: var(--omega-elevated);
+  font-size: 12px;
+}
+#activity-console header div { display: flex; gap: 6px; }
+#activity-console header .btn { padding: 2px 7px; font-size: 11px; }
+#activity-console-list {
+  overflow: auto;
+  padding: 6px 10px;
+  font: 11px/1.55 Consolas, "Courier New", monospace;
+}
+.activity-console-entry { padding: 2px 0; color: var(--omega-muted); border-bottom: 1px solid color-mix(in srgb, var(--omega-border) 55%, transparent); }
+.activity-console-entry.success { color: var(--omega-success); }
+.activity-console-entry.error { color: var(--omega-error); }
+
+.omega-tp-header {
+  height: 44px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--omega-border);
+  background: var(--omega-elevated);
+}
+
+.omega-tp-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--omega-text);
+}
+
+.omega-tp-symbol-badge {
+  background: var(--omega-accent);
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.omega-tp-close-btn {
+  background: transparent;
+  border: 0;
+  color: var(--omega-muted);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.omega-tp-close-btn:hover {
+  color: var(--omega-text);
+  background: var(--omega-border);
+}
+
+.omega-tp-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.omega-tp-market-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--omega-bg);
+  border: 1px solid var(--omega-border);
+  border-radius: 6px;
+  font-size: 11px;
+}
+.omega-tp-spread-label {
+  color: var(--omega-muted);
+}
+.omega-tp-spread-value {
+  font-weight: 700;
+  color: var(--omega-accent);
+}
+
+/* Buy & Sell Shining Buttons */
+.omega-tp-direction-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.omega-tp-dir-btn {
+  background: var(--omega-bg);
+  border: 2px solid var(--omega-border);
+  border-radius: 8px;
+  padding: 12px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.omega-tp-dir-btn:hover {
+  border-color: var(--omega-muted);
+  transform: translateY(-1px);
+}
+
+.omega-tp-dir-btn.sell-btn {
+  color: var(--omega-error);
+}
+.omega-tp-dir-btn.buy-btn {
+  color: var(--omega-success);
+}
+
+.omega-tp-dir-btn.active.sell-btn {
+  border-color: var(--omega-error);
+  background: color-mix(in srgb, var(--omega-error) 18%, var(--omega-surface));
+  box-shadow: 0 0 16px rgba(242, 54, 69, 0.45), inset 0 0 8px rgba(242, 54, 69, 0.2);
+}
+
+.omega-tp-dir-btn.active.buy-btn {
+  border-color: var(--omega-success);
+  background: color-mix(in srgb, var(--omega-success) 18%, var(--omega-surface));
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.45), inset 0 0 8px rgba(16, 185, 129, 0.2);
+}
+
+/* Shining pulse animation for active button */
+.omega-tp-dir-btn.active::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: skewX(-20deg);
+  animation: omegaShine 2.5s infinite;
+  pointer-events: none;
+}
+@keyframes omegaShine {
+  0% { left: -100%; }
+  40% { left: 160%; }
+  100% { left: 160%; }
+}
+
+.omega-tp-dir-name {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+.omega-tp-dir-price {
+  font-size: 15px;
+  font-weight: 700;
+  font-family: Consolas, monospace;
+}
+
+/* Field styling */
+.omega-tp-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.omega-tp-field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--omega-muted);
+}
+
+.omega-tp-lots-control {
+  display: flex;
+  align-items: center;
+  background: var(--omega-bg);
+  border: 1px solid var(--omega-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.omega-tp-step-btn {
+  background: var(--omega-elevated);
+  border: 0;
+  color: var(--omega-text);
+  width: 38px;
+  height: 36px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.omega-tp-step-btn:hover {
+  background: var(--omega-border);
+}
+
+.omega-tp-lots-input {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--omega-text);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: Consolas, monospace;
+  outline: none;
+  min-width: 0;
+}
+
+.omega-tp-quick-lots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.omega-tp-quick-lot-btn {
+  background: var(--omega-bg);
+  border: 1px solid var(--omega-border);
+  color: var(--omega-muted);
+  border-radius: 4px;
+  padding: 4px 0;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.omega-tp-quick-lot-btn:hover {
+  background: var(--omega-elevated);
+  color: var(--omega-text);
+  border-color: var(--omega-accent);
+}
+
+/* Protection Box */
+.omega-tp-protection-card {
+  background: var(--omega-bg);
+  border: 1px solid var(--omega-border);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.omega-tp-prot-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.omega-tp-prot-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.omega-tp-prot-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--omega-text);
+}
+
+.omega-tp-prot-input-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.omega-tp-prot-input {
+  flex: 1;
+  background: var(--omega-surface);
+  border: 1px solid var(--omega-border);
+  border-radius: 4px;
+  padding: 5px 8px;
+  color: var(--omega-text);
+  font-size: 12px;
+  font-family: Consolas, monospace;
+  outline: none;
+}
+.omega-tp-prot-input:focus {
+  border-color: var(--omega-accent);
+}
+
+.omega-tp-prot-mode {
+  background: var(--omega-surface);
+  border: 1px solid var(--omega-border);
+  border-radius: 4px;
+  padding: 5px 8px;
+  color: var(--omega-text);
+  font-size: 11px;
+  outline: none;
+  cursor: pointer;
+}
+
+.omega-tp-protection-note {
+  padding: 5px 7px;
+  border-radius: 4px;
+  background: var(--omega-surface);
+  color: var(--omega-muted);
+  font-size: 10px;
+  font-family: Consolas, monospace;
+}
+.omega-tp-protection-note[data-state="ready"] { color: var(--omega-success); }
+.omega-tp-protection-note[data-state="waiting"] { color: var(--omega-warning, #f59e0b); }
+
+.omega-tp-prot-estimate {
+  font-size: 10px;
+  color: var(--omega-muted);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+.omega-tp-prot-estimate strong { font-family: Consolas, monospace; font-size: 11px; }
+#omega-tp-sl-estimate { color: var(--omega-error); }
+#omega-tp-tp-estimate { color: var(--omega-success); }
+
+/* Bottom Trade Button */
+.omega-tp-footer {
+  padding: 14px;
+  border-top: 1px solid var(--omega-border);
+  background: var(--omega-elevated);
+}
+
+.omega-tp-trade-btn {
+  width: 100%;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.omega-tp-trade-btn.buy {
+  background: #089981;
+}
+.omega-tp-trade-btn.buy:hover {
+  background: #0ea78d;
+  box-shadow: 0 4px 16px rgba(8, 153, 129, 0.45);
+}
+
+.omega-tp-trade-btn.sell {
+  background: #f23645;
+}
+.omega-tp-trade-btn.sell:hover {
+  background: #f44d5a;
+  box-shadow: 0 4px 16px rgba(242, 54, 69, 0.45);
+}
+
+.omega-tp-trade-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}

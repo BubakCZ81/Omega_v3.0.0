@@ -1,0 +1,26 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Acceleration Bands script may be freely distributed under the terms of the GPL-3.0 license.
+indicator(title="Acceleration Bands", shorttitle="AB", overlay=true)
+
+length = input.int(title="Length", defval=20)
+factor = input.float(title="Factor", defval=0.001, step=0.0001)
+src = input.source(title="Source", defval=close)
+
+mult = 4000 * factor * (high - low) / (high + low)
+
+upperBandSrc = high * (1 + mult)
+upperBand = ta.sma(upperBandSrc, length)
+
+basis = ta.sma(src, length)
+
+lowerBandSrc = low * (1 - mult)
+lowerBand = ta.sma(lowerBandSrc, length)
+
+upperBandPlot = plot(upperBand, title="Upper", linewidth=1, color=#138484)
+
+plot(basis, title="Basis", linewidth=1, color=#741b47)
+
+lowerBandPlot = plot(lowerBand, title="Lower", linewidth=1, color=#138484)
+
+fill(upperBandPlot, lowerBandPlot, title="Background", color=color(#ffd966, 84))

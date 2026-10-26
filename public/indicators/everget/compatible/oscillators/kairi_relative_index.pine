@@ -1,0 +1,13 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Kairi Relative Index script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Kairi Relative Index", shorttitle="KRI")
+
+length = input.int(title="Length", minval=1, defval=14)
+src = input.source(title="Source", defval=close)
+
+kri = 100 * (src - ta.sma(src, length)) / ta.sma(src, length)
+
+plot(kri, title="KRI", linewidth=1, color=#134f5c)
+
+hline(0, title="Zero Level", linestyle=dotted, color=#989898)

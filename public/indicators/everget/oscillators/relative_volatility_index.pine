@@ -1,0 +1,52 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Relative Volatility Index script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Relative Volatility Index", shorttitle="RVI")
+
+stdevLength = input.int(title="Standard Deviation Length", minval=1, defval=10)
+stdevType = input(title="Standard Deviation Type", defval="Population", options=["Population", "Sample"])
+smoothLength = input.int(title="Smoothing Length", minval=1, defval=14)
+obLevel = input.int(title="Overbought Level", defval=60)
+osLevel = input.int(title="Oversold Level", defval=40)
+useRefined = input.bool(title="Use Refined Version of RVI ?", defval=true)
+highlightBreakouts = input.bool(title="Highlight Overbought/Oversold Breakouts ?", defval=true)
+src = input.source(title="Source", defval=close)
+
+sampleStdev(src, length) =>
+	dev = src - sma(src, length)
+	variance = sum(pow(dev, 2), length) / (length - 1)
+	sqrt(variance)
+
+selectedStdev = stdevType == "Population"
+	 ? stdev(src, stdevLength)
+	 : sampleStdev(src, stdevLength)
+
+// Original version (1993)
+rviOriginal(src) =>
+	upSum = ema(change(src) >= 0 ? selectedStdev : 0, smoothLength)
+	downSum = ema(change(src) >= 0 ? 0 : selectedStdev, smoothLength)
+	100 * upSum / (upSum + downSum)
+
+// Refined version (1995)
+rvi = useRefined
+	 ? avg(rviOriginal(high), rviOriginal(low))
+	 : rviOriginal(src)
+
+rviColor = rvi > obLevel ? #0ebb23 : rvi < osLevel ? #ff0000 : #f4b77d
+plot(rvi, title="RVI", linewidth=2, color=rviColor)
+
+transparent = color(color.white, 100)
+
+maxLevelPlot = hline(100, title="Max Level", linestyle=dotted, color=transparent)
+obLevelPlot = hline(obLevel, title="Overbought Level", linestyle=dotted)
+hline(50, title="Middle Level", linestyle=dotted)
+osLevelPlot = hline(osLevel, title="Oversold Level", linestyle=dotted)
+minLevelPlot = hline(0, title="Min Level", linestyle=dotted, color=transparent)
+
+fill(obLevelPlot, osLevelPlot, color=color.purple)
+
+obFillColor = rvi > obLevel and highlightBreakouts ? color.green : transparent
+osFillColor = rvi < osLevel and highlightBreakouts ? color.red : transparent
+
+fill(maxLevelPlot, obLevelPlot, color=obFillColor)
+fill(minLevelPlot, osLevelPlot, color=osFillColor)

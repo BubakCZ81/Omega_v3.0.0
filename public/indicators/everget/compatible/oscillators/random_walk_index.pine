@@ -1,0 +1,12 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Random Walk Index script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Random Walk Index", shorttitle="RWI")
+
+length = input.int(title="Length", minval=1, defval=14)
+
+rwiHigh = (high - nz(low[length])) / (ta.atr(length) * math.sqrt(length))
+rwiLow = (nz(high[length]) - low) / (ta.atr(length) * math.sqrt(length))
+
+plot(rwiHigh, title="High", linewidth=2, color=#6d1e7f)
+plot(rwiLow, title="Low", linewidth=2, color=#ff3737)

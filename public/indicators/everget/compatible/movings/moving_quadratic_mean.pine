@@ -1,0 +1,12 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Moving Quadratic Mean (RMS) script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Moving Quadratic Mean (RMS)", shorttitle="RMS", overlay=true)
+
+length = input.int(title="Length", minval=1, defval=14)
+src = input.source(title="Source", defval=close)
+
+rms(src, length) =>
+	math.sqrt(math.sum(src * src, length) / length)
+
+plot(rms(src, length), title="RMS", linewidth=2, color=#6d1e7f)

@@ -1,0 +1,11 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Gopalakrishnan Range Index script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Gopalakrishnan Range Index", shorttitle="GAPO")
+
+length = input.int(title="Length", defval=5)
+
+gapo = math.log(ta.highest(length) - ta.lowest(length)) / math.log(length)
+
+gapoColor = gapo >= gapo[1] ? #0ebb23 : color.red
+plot(gapo, title="GAPO", linewidth=2, color=gapoColor)

@@ -1,0 +1,22 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Smoothed Rate of Change script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Smoothed Rate of Change", shorttitle="S-RoC")
+
+rocLength = input.int(title="ROC Length", minval=1, defval=21)
+smoothingLength = input.int(title="Smoothing Length", minval=1, defval=13)
+src = input.source(title="Source", defval=close)
+
+ma = ema(src, smoothingLength)
+
+sroc = nz(ma[rocLength]) == 0
+	 ? 100
+	 : ma - nz(ma[rocLength]) == 0
+	 	 ? 0
+	 	 : 100 * (ma - nz(ma[rocLength])) / ma[rocLength]
+
+srocColor = sroc >= 0.0 ? #0ebb23 : #ff0000
+
+plot(sroc, title="S-RoC", linewidth=2, color=srocColor)
+
+hline(0, title="Zero Level", linestyle=dotted, color=#989898)

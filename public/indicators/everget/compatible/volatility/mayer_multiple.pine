@@ -1,0 +1,19 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Mayer Multiple script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Mayer Multiple", shorttitle="MM")
+
+smaLength = input.int(title="SMA Length", defval=200)
+threshold = input.float(title="Threshold", step=0.1, defval=2.4)
+
+price = nz(request.security("BTCUSD", period, close))
+
+mm = price / ta.sma(price, smaLength)
+
+mmColor = mm > threshold ? #ff9800 : #3c78d8
+plot(mm, color=mmColor)
+
+hline(threshold, title="Threshold", linestyle=dotted)
+
+breakoutFillColor = mm > threshold ? #ff9800 : color(color.white, 100)
+bgcolor(breakoutFillColor)

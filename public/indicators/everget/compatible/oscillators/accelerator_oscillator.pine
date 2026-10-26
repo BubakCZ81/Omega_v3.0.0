@@ -1,0 +1,15 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Accelerator Oscillator script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Accelerator Oscillator", shorttitle="AC")
+
+fastLength = input.int(title="Fast Length", defval=5)
+slowLength = input.int(title="Slow Length", defval=34)
+smoothLength = input.int(title="Smoothing Length", defval=5)
+
+ao = ta.sma(hl2, fastLength) - ta.sma(hl2, slowLength)
+
+ac = ao - ta.sma(ao, smoothLength)
+
+acColor = ac >= 0 ? (ac[1] < ac ? #26A69A : #B2DFDB) : (ac[1] < ac ? #FFCDD2 : #EF5350)
+plot(ac, title="AC", style=plot.style_columns, color=acColor)

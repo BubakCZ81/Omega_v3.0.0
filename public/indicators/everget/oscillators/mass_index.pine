@@ -1,0 +1,24 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Mass Index script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Mass Index")
+
+smoothLength = input.int(title="Smoothing Length", defval=9)
+sumLength = input.int(title="Summation Length", defval=25)
+breakout = input.int(title="Breakout Level", defval=27)
+
+mi = sum(ema(high - low, smoothLength) / ema(ema(high - low, smoothLength), smoothLength), sumLength)
+
+miColor = mi > breakout - 0.5 ? #ff9800 : #3c78d8
+
+plot(mi, title="Mass Index", linewidth=2, color=miColor)
+
+transparent = color(color.white, 100)
+
+maxLevel = hline(29, title="Max Level", linestyle=dotted, color=transparent)
+breakoutLevel = hline(breakout, title="Breakout Level", linestyle=dotted)
+hline(breakout - 0.5, title="Confirmation Level", linestyle=dotted)
+
+breakoutFillColor = mi > breakout ? #e06666 : transparent
+
+fill(maxLevel, breakoutLevel, color=breakoutFillColor)

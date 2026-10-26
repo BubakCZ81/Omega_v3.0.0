@@ -1,0 +1,19 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Derivative Oscillator script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Derivative Oscillator", shorttitle="DOSC")
+
+rsiLength = input.integer(title="RSI Length", defval=14)
+ema1Length = input.integer(title="1st EMA Smoothing Length", defval=5)
+ema2Length = input.integer(title="2nd EMA Smoothing Length", defval=3)
+smaLength = input.integer(title="3rd SMA Smoothing Length", defval=9)
+signalLength = input.integer(title="Signal Length", defval=9)
+src = input.source(title="Source", defval=close)
+
+smoothedRSI = ta.ema(ta.ema(rsi(src, rsiLength), ema1Length), ema2Length)
+dosc = smoothedRSI - ta.sma(smoothedRSI, smaLength)
+signal = ta.sma(dosc, signalLength)
+
+doscColor = dosc >= 0 ? dosc[1] < dosc ? #26A69A : #B2DFDB : dosc[1] < dosc ? #FFCDD2 : #EF5350
+plot(dosc, title="DOSC", style=plot.style_columns, linewidth=2, color=doscColor)
+plot(signal, title="Signal", linewidth=2, color=color.black)

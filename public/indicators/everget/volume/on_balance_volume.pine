@@ -1,0 +1,50 @@
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+//@version=6
+// On Balance Volume script may be freely distributed under the MIT license.
+const string INDICATOR_SHORT_TITLE = 'OBV'
+indicator('On Balance Volume', shorttitle = INDICATOR_SHORT_TITLE, format = format.volume, timeframe = '')
+
+showSignal = input.bool(true, title = 'Show Signal Line')
+
+enum MovingAverageType
+    EMA = 'EMA'
+    SMA = 'SMA'
+
+signalType = input.enum(MovingAverageType.SMA, title = 'Signal Smoothing Type')
+
+signalLength = input.int(21, minval = 1, title = 'Signal Smoothing Length')
+highlightCrossovers = input.bool(false, title = 'Highlight Crossovers')
+applyFilling = input.bool(true, title = 'Apply OBV/Signal Ribbon Filling')
+
+//---
+
+obv = ta.obv
+obvSignalEma = ta.ema(obv, signalLength)
+obvSignalSma = ta.sma(obv, signalLength)
+signal = signalType == MovingAverageType.EMA ? obvSignalEma : obvSignalSma
+
+const color bullishColor = #0ebb23
+const color bearishColor = color.red
+trendColor = obv > signal ? bullishColor : bearishColor
+
+obvColor = applyFilling ? trendColor : #0094ff
+signalColor = applyFilling ? trendColor : #ff6a00
+
+obvPlot = plot(obv, title = INDICATOR_SHORT_TITLE, linewidth = 2, color = obvColor)
+signalPlot = plot(showSignal ? signal : na, title = 'Signal', color = signalColor)
+
+const color bullishFillColor = color.new(bullishColor, 85)
+const color bearishFillColor = color.new(bearishColor, 85)
+fillColor = applyFilling ? (obv > signal ? bullishFillColor : bearishFillColor) : #ffffff00
+fill(obvPlot, signalPlot, color = fillColor)
+
+plotshape(ta.crossover(obv, signal) and highlightCrossovers ? obv : na, title = 'Crossover Mark', location = location.absolute, style = shape.circle, size = size.tiny, color = color.green)
+plotshape(ta.crossunder(obv, signal) and highlightCrossovers ? obv : na, title = 'Crossunder Mark', location = location.absolute, style = shape.circle, size = size.tiny, color = color.red)
+
+bullishColorChangeAlert = trendColor[1] != bullishColor and trendColor == bullishColor
+bearishColorChangeAlert = trendColor[1] != bearishColor and trendColor == bearishColor
+anyColorChangeAlert = trendColor != trendColor[1]
+
+alertcondition(bullishColorChangeAlert, title = 'Bullish Color Change', message = INDICATOR_SHORT_TITLE + ' - Bullish Color Change\nSymbol: {{exchange}}:{{syminfo.ticker}}\nPrice: {{close}}')
+alertcondition(bearishColorChangeAlert, title = 'Bearish Color Change', message = INDICATOR_SHORT_TITLE + ' - Bearish Color Change\nSymbol: {{exchange}}:{{syminfo.ticker}}\nPrice: {{close}}')
+alertcondition(anyColorChangeAlert, title = 'Any Color Change', message = INDICATOR_SHORT_TITLE + ' - Any Color Change\nSymbol: {{exchange}}:{{syminfo.ticker}}\nPrice: {{close}}')

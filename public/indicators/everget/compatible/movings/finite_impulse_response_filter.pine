@@ -1,0 +1,36 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Finite Impulse Response (FIR) Filter script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Finite Impulse Response (FIR) Filter", shorttitle="FIRF", overlay=true)
+
+coef1 = input.float(title="1st Coefficient", step=0.1, defval=1)
+coef2 = input.float(title="2nd Coefficient", step=0.1, defval=3.5)
+coef3 = input.float(title="3rd Coefficient", step=0.1, defval=4.5)
+coef4 = input.float(title="4th Coefficient", step=0.1, defval=3)
+coef5 = input.float(title="5th Coefficient", step=0.1, defval=0.5)
+coef6 = input.float(title="6th Coefficient", step=0.1, defval=-0.5)
+coef7 = input.float(title="7th Coefficient", step=0.1, defval=-1.5)
+src = input.source(title="Source", defval=close)
+highlight = input.bool(title="Highlight ?", defval=true)
+
+src1 = nz(src[1], src)
+src2 = nz(src[2], src1)
+src3 = nz(src[3], src2)
+src4 = nz(src[4], src3)
+src5 = nz(src[5], src4)
+src6 = nz(src[6], src5)
+
+coefSum = coef1 + coef2 + coef3 + coef4 + coef5 + coef6 + coef7
+
+firf = (
+	 coef1 * src +
+	 coef2 * src1 +
+	 coef3 * src2 +
+	 coef4 * src3 +
+	 coef5 * src4 +
+	 coef6 * src5 +
+	 coef7 * src6
+	 ) / coefSum
+
+firfColor = highlight ? firf > firf[1] ? color.green : color.red : #6d1e7f
+plot(firf, title="FIRF", linewidth=2, color=firfColor)

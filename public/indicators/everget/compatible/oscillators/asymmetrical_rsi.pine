@@ -1,0 +1,45 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Asymmetrical RSI script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Asymmetrical RSI", shorttitle="ARSI")
+
+length = input.integer(title="Length", defval=14)
+obLevel = input.integer(title="Overbought Level", defval=70)
+osLevel = input.integer(title="Oversold Level", defval=30)
+src = input.source(title="Source", defval=close)
+highlightBreakouts = input.bool(title="Highlight Overbought/Oversold Breakouts ?", defval=true)
+
+roc = roc(src, 1)
+
+upCount = math.sum(roc >= 0 ? 1 : 0, length)
+upAlpha = 1 / upCount
+
+upSum = 0.0
+upSum := upAlpha * (roc >= 0 ? roc : 0) + (1 - upAlpha) * nz(upSum[1], upSum)
+
+downCount = length - upCount
+downAlpha = 1 / downCount
+
+downSum = 0.0
+downSum := downAlpha * (roc >= 0 ? 0 : math.abs(roc)) + (1 - downAlpha) * nz(downSum[1], downSum)
+
+arsi = fixnan(100 * upSum / (upSum + downSum))
+
+arsiColor = arsi > obLevel ? #0ebb23 : arsi < osLevel ? #ff0000 : #f4b77d
+plot(arsi, title="ARSI", linewidth=2, color=arsiColor)
+
+transparent = color.new(color.white, 100)
+
+maxLevelPlot = hline(100, title="Max Level", linestyle=hline.style_dotted, color=transparent)
+obLevelPlot = hline(obLevel, title="Overbought Level", linestyle=hline.style_dotted)
+hline(50, title="Middle Level", linestyle=hline.style_dotted)
+osLevelPlot = hline(osLevel, title="Oversold Level", linestyle=hline.style_dotted)
+minLevelPlot = hline(0, title="Min Level", linestyle=hline.style_dotted, color=transparent)
+
+fill(obLevelPlot, osLevelPlot, color=color.purple)
+
+obFillColor = arsi > obLevel and highlightBreakouts ? color.green : transparent
+osFillColor = arsi < osLevel and highlightBreakouts ? color.red : transparent
+
+fill(maxLevelPlot, obLevelPlot, color=obFillColor)
+fill(minLevelPlot, osLevelPlot, color=osFillColor)

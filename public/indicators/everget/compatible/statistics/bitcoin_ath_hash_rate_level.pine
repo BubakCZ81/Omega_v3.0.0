@@ -1,0 +1,23 @@
+//@version=6
+// Copyright (c) 2019-present, Alex Orekhov (everget)
+// Bitcoin ATH Hash Rate Level script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Bitcoin ATH Hash Rate Level", shorttitle="ATH HR", overlay=true)
+
+highlightMovements = input.bool(title="Highlight Price Movements ?", defval=false)
+
+_ath(src) =>
+    ath = src
+    ath := na(ath[1]) ? ath : (ath > ath[1] ? ath : ath[1])
+
+hashRate = request.security("QUANDL:BCHAIN/HRATE", "D", close)
+
+hrATH = _ath(hashRate)
+
+hrathLevel = close
+hrathLevel := hrATH > hrATH[1] ? close : nz(hrathLevel[1], close) //  and close > close[1]
+
+levelColor = highlightMovements ? (close > hrathLevel ? color.green : close < hrathLevel ? color.red : #6d1e7f) : color.black
+plot(hrathLevel, title="Hash Rate", linewidth=2, color=levelColor)
+
+hrathCond = hrATH != hrATH[1]
+alertcondition(hrathCond, title="Alert on New Bitcoin ATH Hash Rate", message="New Bitcoin ATH Hash Rate !")

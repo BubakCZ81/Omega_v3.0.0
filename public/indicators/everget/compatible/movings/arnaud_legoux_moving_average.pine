@@ -1,0 +1,11 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Arnaud Legoux Moving Average script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Arnaud Legoux Moving Average", shorttitle="ALMA", overlay=true)
+
+length = input.int(title="Length", minval=1, defval=9)
+offset = input.float(title="Offset", defval=0.85)
+sigma = input.float(title="Sigma", defval=6)
+src = input.source(title="Source", defval=close)
+
+plot(ta.alma(src, length, offset, sigma), title="ALMA", linewidth=2, color=#e69138)

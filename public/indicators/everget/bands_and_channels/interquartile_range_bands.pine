@@ -1,0 +1,22 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Interquartile Range Bands script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Interquartile Range Bands", shorttitle="IQRB", overlay=true)
+
+length = input.int(title="Length", minval=1, defval=14)
+mult = input.float(title="Multiplier", minval=0, step=0.1, defval=1.5)
+src = input.source(title="Source", defval=close)
+
+q1 = percentile_nearest_rank(src, length, 25)
+median= percentile_nearest_rank(src, length, 50)
+q3 = percentile_nearest_rank(src, length, 75)
+
+iqr = q3 - q1
+
+upperBand = q3 + mult * iqr
+lowerBand = q1 - mult * iqr
+
+upperBandPlot = plot(upperBand, title="Upper", color=#138484)
+plot(median, title="Median", color=#741b47)
+lowerBandPlot = plot(lowerBand, title="Lower", color=#138484)
+fill(upperBandPlot, lowerBandPlot, title="Background", color=color(#ffd966, 84))

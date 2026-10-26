@@ -1,0 +1,56 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Klinger Volume Oscillator script may be freely distributed under the terms of GPL-3.0 license.
+indicator(title="Klinger Volume Oscillator", shorttitle="KVO", precision=0)
+
+fastLength = input.int(title="Fast Length", defval=34)
+slowLength = input.int(title="Slow Length", defval=55)
+showSignal = input.bool(title="Show Signal ?", defval=true)
+signalType = input(title="Signal Smoothing Type", defval="EMA", options=["EMA", "SMA"])
+signalLength = input.int(title="Signal Smoothing Length", defval=13)
+showHistogram = input.bool(title="Show Histogram ?", defval=false)
+highlightCrossovers = input.bool(title="Highlight KVO/Signal Crossovers ?", defval=true)
+highlightZeroCrossovers = input.bool(title="Highlight Zero Line Crossovers ?", defval=true)
+applyFilling = input.bool(title="Apply Ribbon Filling ?", defval=false)
+
+mom = change(hlc3)
+
+trend = 0.0
+trend := na(trend[1]) ? 0.0 : (mom > 0 ? 1 : mom < 0 ? -1 : trend[1])
+
+// Daily Measurement
+dm = high - low
+
+// Cumulative Measurement
+cm = 0.0
+cm := na(cm[1]) ? 0.0 : (trend == trend[1] ? cm[1] + dm : dm + dm[1])
+
+// Volume Force
+vf = cm != 0 ? 100 * volume * trend * abs(2 * dm / cm - 1) : 0
+
+kvo = ema(vf, fastLength) - ema(vf, slowLength)
+signal = signalType == "EMA" ? ema(kvo, signalLength) : sma(kvo, signalLength)
+
+hist = kvo - signal
+histColor = hist >= 0 ? (hist[1] < hist ? #26A69A : #B2DFDB) : (hist[1] < hist ? #FFCDD2 : #EF5350)
+plot(showHistogram ? hist : na, title="Histogram", style=columns, color=histColor)
+hline(0, title="Zero Level", linestyle=dotted)
+
+trendColor = kvo > signal ? #0ebb23 : color.red
+
+kvoColor = applyFilling ? trendColor : (kvo > 0 ? #0ebb23 : color.red)
+signalColor = applyFilling ? trendColor : #512da8
+
+kvoPlot = plot(kvo, title="KVO", linewidth=2, color=kvoColor)
+signalPlot = plot(showSignal ? signal : na, title="Signal", color=signalColor)
+
+transparent = color(color.white, 100)
+
+fillColor = applyFilling ? trendColor : transparent
+fill(kvoPlot, signalPlot, title="Ribbon", color=fillColor)
+
+zeroCrossBgColor = highlightZeroCrossovers ? (kvo > 0 ? color.green : color.red) : transparent
+bgcolor(zeroCrossBgColor, title="Background")
+
+plotshape(crossover(kvo, signal) and highlightCrossovers ? signal : na, title="Crossover", location=location.absolute, style=shape.circle, size=size.tiny, color=color.green)
+plotshape(crossunder(kvo, signal) and highlightCrossovers ? signal : na, title="Crossunder", location=location.absolute, style=shape.circle, size=size.tiny, color=color.red)

@@ -1,0 +1,22 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Stiffness Indicator script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Stiffness Indicator", shorttitle="Stiffness")
+
+maLength = input(title="Moving Average Length", minval=1, defval=100)
+stiffLength = input(title="Stiffness Length", minval=1, defval=60)
+stiffSmooth = input(title="Stiffness Smoothing Length", minval=1, defval=3)
+threshold = input(title="Threshold", minval=1, defval=90)
+highlightThresholdCrossovers = input.bool(title="Highlight Threshold Crossovers ?", defval=false)
+
+bound = ta.sma(close, maLength) - 0.2 * ta.stdev(close, maLength)
+sumAbove = math.sum(close > bound ? 1 : 0, stiffLength)
+stiffness = ta.ema(sumAbove * 100 / stiffLength, stiffSmooth)
+
+transparent = color(color.white, 100)
+
+bgColor = highlightThresholdCrossovers ? (stiffness > threshold ? #0ebb23 : color.red) : transparent
+bgcolor(bgColor)
+
+plot(stiffness, title="Stiffness", style=histogram, color=#f5c75e)
+plot(threshold, title="Threshold", color=color.red)

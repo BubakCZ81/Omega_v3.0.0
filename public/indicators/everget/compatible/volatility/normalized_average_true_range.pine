@@ -1,0 +1,10 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Normalized Average True Range script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Normalized Average True Range", shorttitle="NATR")
+
+length = input.int(title="Length", defval=14)
+
+natr = 100 * ta.atr(length) / close
+
+plot(natr, color=#ff9800)

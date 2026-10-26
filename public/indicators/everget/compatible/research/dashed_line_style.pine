@@ -1,0 +1,8 @@
+//@version=6
+// Copyright (c) 2019-present, Alex Orekhov (everget)
+// Dashed Line Style script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Dashed Line Style", overlay=true)
+
+sma = ta.sma(close, 14)
+
+plot(n % 3 != 0 ? sma : na, style=linebr, linewidth=3, color=color.black)

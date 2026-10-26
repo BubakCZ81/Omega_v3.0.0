@@ -1,0 +1,17 @@
+//@version=6
+indicator("Dual EMA & Signals (PineTS)", overlay = true)
+
+fastLen = input.int(9, "Fast Length")
+slowLen = input.int(21, "Slow Length")
+
+fastEma = ta.ema(close, fastLen)
+slowEma = ta.ema(close, slowLen)
+
+bullish = ta.crossover(fastEma, slowEma)
+bearish = ta.crossunder(fastEma, slowEma)
+
+plot(fastEma, title = "Fast EMA", color = color.green, linewidth = 2)
+plot(slowEma, title = "Slow EMA", color = color.red, linewidth = 2)
+
+plotshape(bullish, title = "Bullish Cross", style = shape.triangleup, location = location.belowbar, color = color.green, size = size.small)
+plotshape(bearish, title = "Bearish Cross", style = shape.triangledown, location = location.abovebar, color = color.red, size = size.small)

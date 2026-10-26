@@ -1,0 +1,11 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Vertical Horizontal Filter script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Vertical Horizontal Filter", shorttitle="VHF")
+
+length = input.int(title="Length", minval=1, defval=28)
+src = input.source(title="Source", defval=close)
+
+vhf = abs(highest(src, length) - lowest(src, length)) / sum(abs(change(src)), length)
+
+plot(vhf, title="VHF", color=#674ea7)

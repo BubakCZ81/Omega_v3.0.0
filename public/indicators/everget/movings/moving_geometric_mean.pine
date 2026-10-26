@@ -1,0 +1,12 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Moving Geometric Mean script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Moving Geometric Mean", shorttitle="MGM", overlay=true)
+
+length = input.int(title="Length", minval=1, defval=14)
+src = input.source(title="Source", defval=close)
+
+mgm(src, length) =>
+	exp(sum(log(src), length) / length)
+
+plot(mgm(src, length), title="MGM", linewidth=2, color=#6d1e7f)

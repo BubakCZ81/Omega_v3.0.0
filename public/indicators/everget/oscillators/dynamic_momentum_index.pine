@@ -1,0 +1,56 @@
+//@version=6
+// Copyright (c) 2019-present, Alex Orekhov (everget)
+// Dynamic Momentum Index script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Dynamic Momentum Index", shorttitle="DMI")
+
+rsiLength = input.int(title="Initial RSI Length", minval=1, defval=14)
+stdevLength = input.int(title="Standard Deviation Length", minval=1, defval=5)
+maLength = input.int(title="Smoothing Length", minval=1, defval=10)
+lower = input.int(title="Lower Bound", defval=5)
+upper = input.int(title="Upper Bound", defval=30)
+obLevel = input.int(title="Overbought Level", defval=70)
+osLevel = input.int(title="Oversold Level", defval=30)
+src = input.source(title="Source", defval=close)
+highlightBreakouts = input.bool(title="Highlight Overbought/Oversold Breakouts ?", defval=true)
+
+stdev = stdev(src, stdevLength)
+V = stdev / sma(stdev, maLength)
+
+T = round(rsiLength / V)
+T := T > upper ? upper : T < lower ? lower : T
+
+// Wilder's Smoothing (Running Moving Average)
+_rma(src, length) =>
+    out = 0.0
+    out := ((length - 1) * nz(out[1]) + src) / length
+
+_rsi(src, length) =>
+	upSum = _rma(max(change(src), 0), length)
+	downSum = _rma(-min(change(src), 0), length)
+	rsi = downSum == 0
+		 ? 100
+		 : upSum == 0
+			 ? 0
+			 : 100 - (100 / (1 + upSum / downSum))
+	rsi
+
+dmi = _rsi(src, T)
+
+dmiColor = dmi > obLevel ? #0ebb23 : dmi < osLevel ? color.red : #f4b77d
+plot(dmi, title="DMI", linewidth=2, color=dmiColor)
+
+transparent = color(color.white, 100)
+
+maxLevelPlot = hline(100, title="Max Level", linestyle=dotted, color=transparent)
+obLevelPlot = hline(obLevel, title="Overbought Level", linestyle=dotted)
+hline(50, title="Middle Level", linestyle=dotted)
+osLevelPlot = hline(osLevel, title="Oversold Level", linestyle=dotted)
+minLevelPlot = hline(0, title="Min Level", linestyle=dotted, color=transparent)
+
+fill(obLevelPlot, osLevelPlot, color=color.purple)
+
+obFillColor = dmi > obLevel and highlightBreakouts ? color.green : transparent
+osFillColor = dmi < osLevel and highlightBreakouts ? color.red : transparent
+
+fill(maxLevelPlot, obLevelPlot, color=obFillColor)
+fill(minLevelPlot, osLevelPlot, color=osFillColor)

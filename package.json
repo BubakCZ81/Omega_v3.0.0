@@ -1,0 +1,105 @@
+{
+  "name": "vela-desktop-app",
+  "version": "3.0.0",
+  "productName": "Omega",
+  "description": "Omega Trading Desktop Platform",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "test": "node scripts/run-tests.mjs",
+    "test:ctrader": "node --test electron/ctrader.test.cjs",
+    "test:ctrader-feed": "node --experimental-strip-types --test src/ctraderFeed.test.mjs",
+    "test:mt5-feed": "node --experimental-strip-types --test src/mt5Feed.test.mjs src/bidAskLines.test.mjs && node --test electron/mt5.test.cjs",
+    "test:workspace-state": "node --experimental-strip-types --test src/workspaceScriptIndicators.test.mjs src/timeframeSelection.test.mjs",
+    "test:startup-workspace": "node --experimental-strip-types --test src/startupWorkspaceState.test.mjs",
+    "test:alpaca-feed": "node --test electron/alpaca.test.cjs && node --experimental-strip-types --test src/alpacaFeed.test.mjs",
+    "test:luxalgo-mcp": "node --test electron/luxalgo-mcp.test.cjs electron/local-ai-mcp.test.cjs",
+    "test:local-ai": "node --test electron/local-ai.test.cjs",
+    "test:modules": "node --experimental-strip-types --test src/featureModules.test.mjs",
+    "test:candle-cache": "node --experimental-strip-types --test src/persistentCandleCache.test.mjs",
+    "test:vela-dismissal": "node --test scripts/velaDismissalPatch.test.mjs",
+    "test:backtest": "node --experimental-strip-types --test src/backtestStats.test.mjs src/backtestHistory.test.mjs src/paperTradingAnalytics.test.mjs",
+    "test:paper-trading": "node --experimental-strip-types --test src/paperTradeMath.test.mjs src/paperTradeInstrument.test.mjs src/paperTradingAnalytics.test.mjs",
+    "test:news": "node --test electron/news.test.cjs",
+    "test:pine-converter": "node --test src/pineVersionConverter.test.mjs",
+    "test:app-paths": "node --experimental-strip-types --test src/appPaths.test.mjs",
+    "test:orderflow": "node --experimental-strip-types --test src/orderFlowCharts.test.mjs",
+    "test:futures-month-boundaries": "node --experimental-strip-types --test src/futuresMonthBoundaries.test.mjs",
+    "test:indicators": "node scripts/validate-indicators.mjs",
+    "test:pine-diagnostics": "node --experimental-strip-types --test src/pineStaticValidator.test.mjs",
+    "test:replay-engine": "node --experimental-strip-types --test src/replayStreamingEngine.test.mjs",
+    "test:update-checker": "node --experimental-strip-types --test src/updateChecker.test.mjs",
+    "build:indicator-catalog": "node scripts/build-catalog.mjs",
+    "migrate:indicators": "node scripts/migrate-everget.mjs",
+    "desktop": "node scripts/desktop-dev.mjs",
+    "desktop:prod": "npm run build && cross-env NODE_ENV=production electron .",
+    "package:win": "npm run build && electron-builder --win nsis --x64 --publish never"
+  },
+  "dependencies": {
+    "@luxalgo/broker-sdk": "^0.5.1",
+    "@luxalgo/vela": "^0.9.0",
+    "@luxalgo/vela-pinets": "^0.3.0",
+    "dompurify": "^3.4.17",
+    "lightweight-charts": "^5.2.1",
+    "monaco-editor": "^0.57.0",
+    "pinescript-v6-validator": "0.4.3",
+    "pinets": "^0.13.0"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6",
+    "cross-env": "^10.1.0",
+    "electron": "^44.9.0",
+    "electron-builder": "^26.15.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "wait-on": "^9.5.1"
+  },
+  "overrides": {
+    "dompurify": "$dompurify"
+  },
+  "build": {
+    "appId": "com.omega.trading.desktop",
+    "productName": "Omega",
+    "asar": true,
+    "directories": {
+      "output": "release-omega"
+    },
+    "extraResources": [
+      {
+        "from": "electron/mt5_bridge.py",
+        "to": "mt5_bridge.py"
+      }
+    ],
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "node_modules/@luxalgo/broker-sdk/**/*",
+      "package.json"
+    ],
+    "publish": [],
+    "win": {
+      "icon": "public\\omega.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}_v${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Omega",
+      "uninstallDisplayName": "Omega"
+    }
+  }
+}

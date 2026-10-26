@@ -1,0 +1,24 @@
+//@version=6
+// Copyright (c) 2018-present, Alex Orekhov (everget)
+// Trend Continuation Factor script may be freely distributed under the terms of the GPL-3.0 license.
+indicator("Trend Continuation Factor", shorttitle="TCF")
+
+length = input.int(title="Length", minval=1, defval=35)
+src = input.source(title="Source", defval=close)
+
+plusChange(src) => ta.change(src) > 0 ? ta.change(src) : 0.0
+minusChange(src) => ta.change(src) > 0 ? 0.0 : -ta.change(src)
+
+plusCF = 0.0
+plusCF := plusChange(src) == 0 ? 0.0 : plusChange(src) + nz(plusCF[1])
+
+minusCF = 0.0
+minusCF := minusChange(src) == 0 ? 0.0 : minusChange(src) + nz(minusCF[1])
+
+plusTCF = math.sum(plusChange(src) - minusCF, length)
+minusTCF = math.sum(minusChange(src) - plusCF, length)
+
+plot(plusTCF, title="+TCF", linewidth=2, color=#38761d)
+plot(minusTCF, title="-TCF", linewidth=2, color=#cc4125)
+
+hline(0, title="Zero Level", linestyle=line, color=#e69138)

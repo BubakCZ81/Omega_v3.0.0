@@ -1,0 +1,59 @@
+//@version=6
+// Copyright (c) 2019-present, Alex Orekhov (everget)
+// Ehlers Triple Delay-Line Detrender script may be freely distributed under the terms of GPL-3.0 license.
+indicator("Ehlers Triple Delay-Line Detrender", shorttitle="TDLD")
+
+src = input.source(title="Source", defval=hl2)
+showSignal = input.bool(title="Show Signal Line ?", defval=true)
+showHistogram = input.bool(title="Show Histogram ?", defval=false)
+highlightCrossovers = input.bool(title="Highlight Signal Crossovers ?", defval=true)
+highlightZeroCrossovers = input.bool(title="Highlight Zero Line Crossovers ?", defval=false)
+applyFilling = input.bool(title="Apply Ribbon Filling ?", defval=false)
+
+tmp1 = 0.0
+tmp1 := src + .088 * nz(tmp1[6])
+
+tmp2 = 0.0
+tmp2 := tmp1 - nz(tmp1[6]) + 1.2 * nz(tmp2[6]) - 0.7 * nz(tmp2[12])
+
+detrender = nz(tmp2[12]) - 2 * nz(tmp2[6]) + tmp2
+
+_moef(src) =>
+    src1 = nz(src[1], src)
+    src2 = nz(src[2], src1)
+    src3 = nz(src[3], src2)
+    
+    moef = src
+    moef := 0.13785 * (2 * src - src1) +
+             0.0007 * (2 * src1 - src2) +
+             0.13785 * (2 * src2 - src3) +
+             1.2103 * nz(moef[1], moef) -
+             0.4867 * nz(moef[2], moef)
+    moef
+
+tdld = _moef(detrender)
+signal = _moef(tdld)
+
+hist = tdld - signal
+histColor = hist >= 0 ? (hist[1] < hist ? #26a69a : #b2dfdb) : (hist[1] < hist ? #ffcdd2 : #ef5350)
+plot(showHistogram ? hist : na, title="Histogram", style=plot.style_columns, color=histColor)
+hline(0, title="Zero Level", linestyle=dotted)
+
+trendColor = tdld > signal ? #0ebb23 : color.red
+
+tdldColor = applyFilling ? trendColor : (tdld > 0 ? #0ebb23 : color.red)
+signalColor = applyFilling ? trendColor : #ff9800
+
+tdldPlot = plot(tdld, title="TDLD", linewidth=2, color=tdldColor)
+signalPlot = plot(showSignal ? signal : na, title="Signal", color=signalColor)
+
+transparent = color(color.white, 100)
+
+fillColor = applyFilling ? trendColor : transparent
+fill(tdldPlot, signalPlot, color=fillColor)
+
+zeroCrossBgColor = highlightZeroCrossovers ? (tdld > 0 ? color.green : color.red) : transparent
+bgcolor(zeroCrossBgColor)
+
+plotshape(highlightCrossovers and ta.crossover(tdld, signal) ? avg(tdld, tdld[1]) : na, title="Crossover", location=location.absolute, style=shape.circle, size=size.tiny, color=color.green)
+plotshape(highlightCrossovers and ta.crossunder(tdld, signal) ? avg(tdld, tdld[1]) : na, title="Crossunder", location=location.absolute, style=shape.circle, size=size.tiny, color=color.red)

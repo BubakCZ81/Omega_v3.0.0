@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Linear Regression (All Data)",
+    "source": "/indicators/everget/compatible/statistics/linear_regression_all_data.pine",
+    "subcategory": "Trend",
+    "sourceUrl": "https://www.tradingview.com/script/NUeh5q6T-Linear-Regression-All-Data/",
+    "license": "GPL-3.0",
+    "licenseFile": "everget/LICENSE"
+  }
+]
